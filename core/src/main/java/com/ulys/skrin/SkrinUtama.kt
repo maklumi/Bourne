@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.ulys.Entiti
+import com.ulys.KawalPemain
 import com.ulys.Util
 
 class SkrinUtama : Screen {
@@ -24,6 +25,7 @@ class SkrinUtama : Screen {
     private val path = "maps/tmx/Town.tmx"
     private lateinit var player: Entiti
     private lateinit var playerSprite: Sprite
+    private lateinit var kawalPemain: KawalPemain
 
     override fun show() {
         setupViewport()
@@ -38,18 +40,23 @@ class SkrinUtama : Screen {
 
         player = Entiti(util)
         playerSprite = player.frameSprite
+
+        kawalPemain = KawalPemain(player)
+        Gdx.input.inputProcessor = kawalPemain
     }
 
     override fun render(delta: Float) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
+        kawalPemain.kemaskini(delta)
+
         renderer.setView(kamera)
         renderer.render()
         //player
         renderer.batch.begin()
         // guna world unit iaitu kaki
-        renderer.batch.draw(playerSprite, 2f, 2f, 1f, 1f)
+        renderer.batch.draw(playerSprite, player.pos.x, player.pos.y, 1f, 1f)
         renderer.batch.end()
     }
 
