@@ -2,7 +2,10 @@ package com.ulys
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.assets.loaders.TextureLoader
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
+import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 
@@ -28,6 +31,28 @@ class Util {
         } else {
             Gdx.app.debug("Util29", "Tak dapat peta : $path")
             TiledMap()
+        }
+    }
+
+    fun muatAsetTekstur(path: String) {
+        val resolver = InternalFileHandleResolver()
+        if (resolver.resolve(path).exists()) {
+            man.setLoader(Texture::class.java, TextureLoader(resolver))
+            man.load(path, Texture::class.java)
+            man.finishLoadingAsset<Texture>(path)
+            Gdx.app.debug("Util42", "Tekstur dimuat: $path")
+        } else {
+            Gdx.app.debug("Util44", "Tekstur gagal dimuat: $path")
+        }
+    }
+
+    fun getAsetTekstur(path: String): Texture {
+        if (!man.isLoaded(path)) muatAsetTekstur(path)
+        return if (man.isLoaded(path)) {
+            man.get(path, Texture::class.java)
+        } else {
+            Gdx.app.debug("Util53", "Tak dapat tekstur : $path")
+            Texture(16, 16, Pixmap.Format.RGBA8888)
         }
     }
 

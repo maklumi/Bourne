@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
+import com.ulys.Entiti
 import com.ulys.Util
 
 class SkrinUtama : Screen {
@@ -20,6 +22,8 @@ class SkrinUtama : Screen {
     lateinit var renderer: OrthogonalTiledMapRenderer
     private val util = Util()
     private val path = "maps/tmx/Town.tmx"
+    private lateinit var player: Entiti
+    private lateinit var playerSprite: Sprite
 
     override fun show() {
         setupViewport()
@@ -31,6 +35,9 @@ class SkrinUtama : Screen {
 
         renderer = OrthogonalTiledMapRenderer(peta, kpp)
         renderer.setView(kamera)
+
+        player = Entiti(util)
+        playerSprite = player.frameSprite
     }
 
     override fun render(delta: Float) {
@@ -39,6 +46,11 @@ class SkrinUtama : Screen {
 
         renderer.setView(kamera)
         renderer.render()
+        //player
+        renderer.batch.begin()
+        // guna world unit iaitu kaki
+        renderer.batch.draw(playerSprite, 2f, 2f, 1f, 1f)
+        renderer.batch.end()
     }
 
     override fun resize(width: Int, height: Int) {}
