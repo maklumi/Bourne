@@ -22,9 +22,8 @@ class SkrinUtama : Screen {
     lateinit var kamera: OrthographicCamera
     lateinit var renderer: OrthogonalTiledMapRenderer
     private val util = Util()
-    private val path = "maps/tmx/Town.tmx"
+    private val path = "sprites/tmx/Town.tmx"
     private lateinit var player: Entiti
-    private lateinit var playerSprite: Sprite
     private lateinit var kawalPemain: KawalPemain
 
     override fun show() {
@@ -39,7 +38,6 @@ class SkrinUtama : Screen {
         renderer.setView(kamera)
 
         player = Entiti(util)
-        playerSprite = player.frameSprite
 
         kawalPemain = KawalPemain(player)
         Gdx.input.inputProcessor = kawalPemain
@@ -50,13 +48,14 @@ class SkrinUtama : Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         kawalPemain.kemaskini(delta)
+        player.kemaskini(delta)
 
         renderer.setView(kamera)
         renderer.render()
         //player
         renderer.batch.begin()
         // guna world unit iaitu kaki
-        renderer.batch.draw(playerSprite, player.pos.x, player.pos.y, 1f, 1f)
+        renderer.batch.draw(player.texRegion, player.pos.x, player.pos.y, 1f, 1f)
         renderer.batch.end()
     }
 
