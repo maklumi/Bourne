@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array
 
 open class Entiti(private val util: Util) {
 
-    private val spritePath = "sprites/Characters/Warrior.png"
+    private val spritePath = "sprites/characters/Warrior.png"
     var texRegion: TextureRegion? = null
     private var masafrem = 0f
 
@@ -26,7 +26,8 @@ open class Entiti(private val util: Util) {
     private val walkUpAnim = Animation(0.25f, walkUpFrames, Animation.PlayMode.LOOP)
     private val walkDownAnim = Animation(0.25f, walkDownFrames, Animation.PlayMode.LOOP)
 
-    val pos = Vector2(1f, 1f)
+    val pos = Vector2(4f, 4f)
+
     private val laju = Vector2(5f, 5f)
 
     enum class Arah { KIRI, KANAN, ATAS, BAWAH }
@@ -87,6 +88,12 @@ open class Entiti(private val util: Util) {
         val lebar = LEBAR_FREM * 1f
         val tinggi = TINGGI_FREM * 0.5f
         nextRect.set(nextPos.x, nextPos.y, lebar, tinggi)
+    }
+
+    fun updatePositionsAndBound(newPos: Vector2) {
+        pos.set(newPos)
+        nextPos.set(pos)
+        setNextBoundSize()
     }
 
     companion object {
