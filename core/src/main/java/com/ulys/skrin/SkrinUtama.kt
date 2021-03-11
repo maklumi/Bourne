@@ -13,7 +13,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Rectangle
 import com.ulys.Entiti
-import com.ulys.KawalPemain
 import com.ulys.PengurusPeta
 import com.ulys.Util
 
@@ -29,7 +28,6 @@ class SkrinUtama : Screen {
     private val util = Util()
 
     private lateinit var player: Entiti
-    private lateinit var kawalPemain: KawalPemain
     private lateinit var pengurusPeta: PengurusPeta
     private val kpp = PengurusPeta.kpp
     private lateinit var shapeRenderer: ShapeRenderer
@@ -51,8 +49,6 @@ class SkrinUtama : Screen {
         player = Entiti(util)
         player.updatePositionsAndBound(pengurusPeta.posisiMula)
 
-        kawalPemain = KawalPemain(player)
-        Gdx.input.inputProcessor = kawalPemain
         shapeRenderer = ShapeRenderer()
     }
 
@@ -64,7 +60,6 @@ class SkrinUtama : Screen {
         kamera.position.set(player.pos.x, player.pos.y, 0f)
         kamera.update()
 
-        kawalPemain.kemaskini(delta)
         player.kemaskini(delta)
 
         if (!akanBerlagaDenganLayer(player.nextRect)) {
@@ -91,7 +86,10 @@ class SkrinUtama : Screen {
 
     override fun hide() {}
 
-    override fun dispose() {}
+    override fun dispose() {
+        player.dispose()
+        Gdx.input.inputProcessor = null
+    }
 
     private fun setupViewport() {
         lebarWindow = Gdx.graphics.width.toFloat()

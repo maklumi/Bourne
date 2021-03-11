@@ -6,7 +6,9 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
 
-open class Entiti(private val util: Util) {
+class Entiti(private val util: Util) {
+
+    private val komponenInput = KomponenInput(this)
 
     private val spritePath = "sprites/characters/Warrior.png"
     var texRegion: TextureRegion? = null
@@ -31,12 +33,16 @@ open class Entiti(private val util: Util) {
     private val laju = Vector2(5f, 5f)
 
     enum class Arah { KIRI, KANAN, ATAS, BAWAH }
+    enum class Gerak { DIAM, JALAN }
 
     var arah = Arah.BAWAH
+    var gerak = Gerak.DIAM
     val nextRect = Rectangle()
     private val nextPos = Vector2(pos)
 
     fun kemaskini(delta: Float) {
+        komponenInput.kemaskini(delta)
+
         masafrem = (masafrem + delta) % 5
         setCurrentFrame()
         setNextBoundSize()
@@ -94,6 +100,10 @@ open class Entiti(private val util: Util) {
         pos.set(newPos)
         nextPos.set(pos)
         setNextBoundSize()
+    }
+
+    fun dispose() {
+        util.dispose(spritePath)
     }
 
     companion object {
