@@ -1,6 +1,7 @@
 package com.ulys
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
@@ -26,6 +27,9 @@ class PengurusPeta(private val util: Util) {
 
     val posisiMula: Vector2
         get() = jadualPosisiAwal.getOrDefault(namaPeta, Vector2())
+    lateinit var kamera: OrthographicCamera
+
+    var berpindah = false
 
     fun setupPeta(nama: String) {
         val path = jadualPeta.getOrDefault(nama, TOWN)
@@ -45,7 +49,6 @@ class PengurusPeta(private val util: Util) {
             tempatMula = jadualPosisiAwal.getOrDefault(nama, Vector2())
         }
         jadualPosisiAwal[namaPeta] = tempatMula
-//        Gdx.app.debug("PengurusPeta", "posisiSpawn $namaPeta $tempatMula kaki")
     }
 
     fun cacheTempatSpawnHampir(pos: Vector2) {

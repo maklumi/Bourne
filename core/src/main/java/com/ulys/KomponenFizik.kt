@@ -1,34 +1,63 @@
 package com.ulys
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.ulys.Entiti.Arah
+import com.ulys.Entiti.Gerak
+import com.ulys.Penerima.Mesej
 import com.ulys.PengurusPeta.Companion.kpp
 
-class KomponenFizik(private val pengurusPeta: PengurusPeta) {
+class KomponenFizik(private val pengurusPeta: PengurusPeta) : Penerima {
 
-    val pos = Vector2(4f, 4f)
+    private var pos = Vector2(4f, 4f)
+    private var arah = Arah.BAWAH
+    private var gerak = Gerak.DIAM
     private val laju = Vector2(5f, 5f)
-    private val nextPos = Vector2(pos)
-    val nextRect = Rectangle()
+    private var nextPos = Vector2(pos)
+    var nextRect = Rectangle()
 
     fun kemaskini(delta: Float, entiti: Entiti) {
         setNextBoundSize()
-        if (!akanBerlagaDenganLayer(nextRect) && entiti.gerak == Entiti.Gerak.JALAN) {
+        if (!akanBerlagaDenganLayer(nextRect) && gerak == Gerak.JALAN) {
             setCalculatedPosAsCurrent()
+            entiti.posMesej(Mesej.POS_KINI, toJson(pos))
         }
-        if (entiti.gerak == Entiti.Gerak.JALAN) kiraPosisi(delta, entiti.arah)
+        if (gerak == Gerak.JALAN) kiraPosisi(delta, arah)
+        cekMasukPortalLayer(nextRect)
+
+        val kamera = pengurusPeta.kamera
+        kamera.position.set(pos.x, pos.y, 0f)
+        kamera.update()
     }
 
-    private fun kiraPosisi(delta: Float, arah: Entiti.Arah) {
+    override fun terima(s: String) {
+        val lis = s.split(Penerima.PEMISAH)
+        if (lis.size == 2) {
+            when (Mesej.valueOf(lis[0])) {
+                Mesej.POS_MULA -> {
+                    pos = fromJson(lis[1])
+                    nextPos = fromJson(lis[1])
+                }
+                Mesej.ARAH_KINI -> arah = fromJson(lis[1])
+                Mesej.GERAK_KINI -> gerak = fromJson(lis[1])
+                else -> {
+                }
+            }
+        }
+    }
+
+    private fun kiraPosisi(delta: Float, arah: Arah) {
         val tempPos = Vector2(pos)
         laju.scl(delta)
         when (arah) {
-            Entiti.Arah.KIRI -> tempPos.x -= laju.x
-            Entiti.Arah.KANAN -> tempPos.x += laju.x
-            Entiti.Arah.ATAS -> tempPos.y += laju.y
-            Entiti.Arah.BAWAH -> tempPos.y -= laju.y
+            Arah.KIRI -> tempPos.x -= laju.x
+            Arah.KANAN -> tempPos.x += laju.x
+            Arah.ATAS -> tempPos.y += laju.y
+            Arah.BAWAH -> tempPos.y -= laju.y
         }
         nextPos.set(tempPos)
         laju.scl(1 / delta)
@@ -44,7 +73,7 @@ class KomponenFizik(private val pengurusPeta: PengurusPeta) {
         nextRect.set(nextPos.x, nextPos.y, lebar, tinggi)
     }
 
-    fun updatePositionsAndBound(newPos: Vector2) {
+    private fun updatePositionsAndBound(newPos: Vector2) {
         pos.set(newPos)
         nextPos.set(pos)
         setNextBoundSize()
@@ -65,5 +94,36 @@ class KomponenFizik(private val pengurusPeta: PengurusPeta) {
             }
         }
         return false
+    }
+
+    private fun cekMasukPortalLayer(rect: Rectangle): Boolean {
+        val layer = pengurusPeta.portalLayer
+        for (i in 0 until layer.objects.count) {
+            val obj = layer.objects[i]
+            if (obj is RectangleMapObject && rect.overlaps(obj.rectangle)) {
+                val namaPeta = obj.name
+                pengurusPeta.cacheTempatSpawnHampir(pos)
+                pengurusPeta.setupPeta(namaPeta)
+                pengurusPeta.berpindah = true
+
+                if (namaPeta == PengurusPeta.TOP_WORLD) {
+                    pengurusPeta.kamera = OrthographicCamera(75f, 75f)
+                    pengurusPeta.kamera.setToOrtho(false, 75f, 75f)
+                } else if (namaPeta == PengurusPeta.TOWN) {
+                    pengurusPeta.kamera = OrthographicCamera(40f, 30f)
+                    pengurusPeta.kamera.setToOrtho(false, 40f, 30f)
+                }
+                pengurusPeta.kamera.update()
+
+                updatePositionsAndBound(pengurusPeta.posisiMula)
+                Gdx.app.debug(TAG, "Masuk portal $namaPeta $pos")
+                return true
+            }
+        }
+        return false
+    }
+
+    companion object {
+        private const val TAG = "KomponenFizik"
     }
 }

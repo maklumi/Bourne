@@ -1,14 +1,19 @@
 package com.ulys
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import com.ulys.Penerima.Mesej
+import com.ulys.PengurusPeta.Companion.kpp
 
-class KomponenGrafik(private val util: Util, private val entiti: Entiti) {
+class KomponenGrafik(private val util: Util) : Penerima {
 
     private val spritePath = "sprites/characters/Warrior.png"
-    var texRegion: TextureRegion? = null
+    private var texRegion: TextureRegion? = null
     private var masafrem = 0f
 
     private val walkLeftFrames = Array<TextureRegion>(4)
@@ -25,19 +30,41 @@ class KomponenGrafik(private val util: Util, private val entiti: Entiti) {
     private val walkUpAnim = Animation(0.25f, walkUpFrames, Animation.PlayMode.LOOP)
     private val walkDownAnim = Animation(0.25f, walkDownFrames, Animation.PlayMode.LOOP)
 
-    fun kemaskini(delta: Float, entiti: Entiti, batch: Batch) {
+    private var pos = Vector2()
+    private var arah = Entiti.Arah.BAWAH
+    private var gerak = Entiti.Gerak.DIAM
+    private val shapeRenderer = ShapeRenderer()
+
+    fun kemaskini(delta: Float, entiti: Entiti, batch: Batch, pengurusPeta: PengurusPeta) {
         masafrem = (masafrem + delta) % 5
         setCurrentFrame()
 
         batch.begin()
-        batch.draw(
-            texRegion,
-            entiti.komponenFizik.pos.x,
-            entiti.komponenFizik.pos.y,
-            1f,
-            1f
-        )
+        batch.draw(texRegion, pos.x, pos.y, 1f, 1f)
         batch.end()
+
+        shapeRenderer.apply {
+            projectionMatrix = pengurusPeta.kamera.combined
+            begin(ShapeRenderer.ShapeType.Line)
+            color = Color.GRAY
+            val r = entiti.rect
+            rect(r.x * kpp, r.y * kpp, r.width * kpp, r.height * kpp)
+            end()
+        }
+    }
+
+    override fun terima(s: String) {
+        val lis = s.split(Penerima.PEMISAH)
+        if (lis.size < 2) return
+        // untuk satu payload
+        if (lis.size == 2) {
+            when (Mesej.valueOf(lis[0])) {
+                Mesej.POS_MULA -> pos = fromJson(lis[1])
+                Mesej.POS_KINI -> pos = fromJson(lis[1])
+                Mesej.ARAH_KINI -> arah = fromJson(lis[1])
+                Mesej.GERAK_KINI -> gerak = fromJson(lis[1])
+            }
+        }
     }
 
     private fun muatSemuaAnimasi() {
@@ -57,15 +84,15 @@ class KomponenGrafik(private val util: Util, private val entiti: Entiti) {
     }
 
     private fun setCurrentFrame() {
-        texRegion = if (entiti.gerak == Entiti.Gerak.JALAN) {
-            when (entiti.arah) {
+        texRegion = if (gerak == Entiti.Gerak.JALAN) {
+            when (arah) {
                 Entiti.Arah.KIRI -> walkLeftAnim.getKeyFrame(masafrem)
                 Entiti.Arah.KANAN -> walkRightAnim.getKeyFrame(masafrem)
                 Entiti.Arah.ATAS -> walkUpAnim.getKeyFrame(masafrem)
                 Entiti.Arah.BAWAH -> walkDownAnim.getKeyFrame(masafrem)
             }
         } else {
-            when (entiti.arah) {
+            when (arah) {
                 Entiti.Arah.KIRI -> walkLeftAnim.getKeyFrame(0f)
                 Entiti.Arah.KANAN -> walkRightAnim.getKeyFrame(0f)
                 Entiti.Arah.ATAS -> walkUpAnim.getKeyFrame(0f)
@@ -74,7 +101,7 @@ class KomponenGrafik(private val util: Util, private val entiti: Entiti) {
         }
     }
 
-    fun dispose() {
+    override fun dispose() {
         util.dispose(spritePath)
     }
 }

@@ -4,8 +4,11 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.math.Vector3
+import com.ulys.Entiti.Arah
+import com.ulys.Entiti.Gerak
+import com.ulys.Penerima.Mesej
 
-class KomponenInput(private val pemain: Entiti) : InputProcessor {
+class KomponenInput(private val entiti: Entiti) : InputProcessor, Penerima {
 
     private enum class Kekunci { KIRI, KANAN, ATAS, BAWAH, QUIT }
 
@@ -26,6 +29,8 @@ class KomponenInput(private val pemain: Entiti) : InputProcessor {
         Gdx.input.inputProcessor = this
     }
 
+    override fun terima(s: String) {}
+
     fun kemaskini(delta: Float) {
         prosesInput(delta)
     }
@@ -34,25 +39,25 @@ class KomponenInput(private val pemain: Entiti) : InputProcessor {
         if (delta < 0.008f) return
         when {
             kekunci[Kekunci.KIRI] == true -> {
-                pemain.arah = Entiti.Arah.KIRI
-                pemain.gerak = Entiti.Gerak.JALAN
+                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.KIRI))
+                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.JALAN))
             }
             kekunci[Kekunci.KANAN] == true -> {
-                pemain.arah = Entiti.Arah.KANAN
-                pemain.gerak = Entiti.Gerak.JALAN
+                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.KANAN))
+                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.JALAN))
             }
             kekunci[Kekunci.ATAS] == true -> {
-                pemain.arah = Entiti.Arah.ATAS
-                pemain.gerak = Entiti.Gerak.JALAN
+                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.ATAS))
+                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.JALAN))
             }
             kekunci[Kekunci.BAWAH] == true -> {
-                pemain.arah = Entiti.Arah.BAWAH
-                pemain.gerak = Entiti.Gerak.JALAN
+                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.BAWAH))
+                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.JALAN))
             }
             kekunci[Kekunci.QUIT] == true -> {
                 Gdx.app.exit()
             }
-            else -> pemain.gerak = Entiti.Gerak.DIAM
+            else -> entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.DIAM))
         }
     }
 

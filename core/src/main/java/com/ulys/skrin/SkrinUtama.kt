@@ -9,10 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
-import com.badlogic.gdx.math.Rectangle
-import com.ulys.Entiti
-import com.ulys.PengurusPeta
-import com.ulys.Util
+import com.ulys.*
 
 class SkrinUtama : Screen {
 
@@ -39,13 +36,15 @@ class SkrinUtama : Screen {
 
         pengurusPeta = PengurusPeta(util)
         pengurusPeta.setupPeta(PengurusPeta.TOWN)
+        pengurusPeta.kamera = this.kamera
         peta = pengurusPeta.peta
 
+
         renderer = OrthogonalTiledMapRenderer(peta, kpp)
-        renderer.setView(kamera)
+        renderer.setView(pengurusPeta.kamera)
 
         player = Entiti(util, pengurusPeta)
-        player.komponenFizik.updatePositionsAndBound(pengurusPeta.posisiMula)
+        player.posMesej(Penerima.Mesej.POS_MULA, toJson(pengurusPeta.posisiMula))
 
         shapeRenderer = ShapeRenderer()
     }
@@ -54,18 +53,15 @@ class SkrinUtama : Screen {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        // lock and center camera to player's pos
-        kamera.position.set(player.komponenFizik.pos.x, player.komponenFizik.pos.y, 0f)
-        kamera.update()
-
-        // peta
-        renderer.setView(kamera)
+        if (pengurusPeta.berpindah) {
+            pengurusPeta.berpindah = false
+            renderer.map = pengurusPeta.peta
+            player.posMesej(Penerima.Mesej.POS_MULA, toJson(pengurusPeta.posisiMula))
+        }
+        renderer.setView(pengurusPeta.kamera)
         renderer.render(intArrayOf(1))
 
-        // player
         player.kemaskini(delta, renderer.batch)
-
-        cekMasukPortalLayer(player.komponenFizik.nextRect)
 
         lukisDebug()
     }
@@ -79,7 +75,7 @@ class SkrinUtama : Screen {
     override fun hide() {}
 
     override fun dispose() {
-        player.komponenGrafik.dispose()
+        player.dispose()
         Gdx.input.inputProcessor = null
     }
 
@@ -97,43 +93,10 @@ class SkrinUtama : Screen {
 //        Gdx.app.debug("SkrinUtama", "Viewport: $lebarViewcam,$tinggiViewcam")
     }
 
-    private fun cekMasukPortalLayer(rect: Rectangle): Boolean {
-        val layer = pengurusPeta.portalLayer
-        for (i in 0 until layer.objects.count) {
-            val obj = layer.objects[i]
-            if (obj is RectangleMapObject && rect.overlaps(obj.rectangle)) {
-                val namaPeta = obj.name
-                pengurusPeta.cacheTempatSpawnHampir(player.komponenFizik.pos)
-                pengurusPeta.setupPeta(namaPeta)
-                peta = pengurusPeta.peta
-                renderer.map = peta
-
-                if (namaPeta == PengurusPeta.TOP_WORLD) {
-                    kamera = OrthographicCamera(75f, 75f)
-                    kamera.setToOrtho(false, 75f, 75f)
-                } else if (namaPeta == PengurusPeta.TOWN) {
-                    kamera = OrthographicCamera(40f, 30f)
-                    kamera.setToOrtho(false, 40f, 30f)
-                }
-                kamera.update()
-
-                player.komponenFizik.updatePositionsAndBound(pengurusPeta.posisiMula)
-                Gdx.app.debug("SkrinUtama123", "Masuk portal $namaPeta ${player.komponenFizik.pos}")
-                return true
-            }
-        }
-        return false
-    }
 
     private fun lukisDebug() {
         shapeRenderer.apply {
-            projectionMatrix = kamera.combined
-            // player
-            begin(ShapeRenderer.ShapeType.Filled)
-            color = Color.GOLD
-            val r = player.komponenFizik.nextRect
-            rect(r.x * kpp, r.y * kpp, r.width * kpp, r.height * kpp)
-            end()
+            projectionMatrix = pengurusPeta.kamera.combined
             // layers
             begin(ShapeRenderer.ShapeType.Line)
             val layer = pengurusPeta.spawnsLayer
