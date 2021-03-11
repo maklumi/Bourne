@@ -60,19 +60,19 @@ class SkrinUtama : Screen {
         kamera.position.set(player.pos.x, player.pos.y, 0f)
         kamera.update()
 
-        player.kemaskini(delta)
+        // peta
+        renderer.setView(kamera)
+        renderer.render(intArrayOf(1))
 
+        // player
+        player.kemaskini(delta)
         if (!akanBerlagaDenganLayer(player.nextRect)) {
             player.setCalculatedPosAsCurrent()
         }
         cekMasukPortalLayer(player.nextRect)
 
-        renderer.setView(kamera)
-        renderer.render(intArrayOf(1))
-        //player
         renderer.batch.begin()
-        // guna world unit iaitu kaki
-        renderer.batch.draw(player.texRegion, player.pos.x, player.pos.y, 1f, 1f)
+        renderer.batch.draw(player.komponenGrafik.texRegion, player.pos.x, player.pos.y, 1f, 1f)
         renderer.batch.end()
         lukisDebugPemain()
         lukisDebugSpawnlayer()
@@ -87,7 +87,7 @@ class SkrinUtama : Screen {
     override fun hide() {}
 
     override fun dispose() {
-        player.dispose()
+        player.komponenGrafik.dispose()
         Gdx.input.inputProcessor = null
     }
 
