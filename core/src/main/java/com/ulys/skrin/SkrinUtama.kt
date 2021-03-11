@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.maps.MapLayer
-import com.badlogic.gdx.maps.MapObject
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
@@ -46,8 +44,8 @@ class SkrinUtama : Screen {
         renderer = OrthogonalTiledMapRenderer(peta, kpp)
         renderer.setView(kamera)
 
-        player = Entiti(util)
-        player.updatePositionsAndBound(pengurusPeta.posisiMula)
+        player = Entiti(util, pengurusPeta)
+        player.komponenFizik.updatePositionsAndBound(pengurusPeta.posisiMula)
 
         shapeRenderer = ShapeRenderer()
     }
@@ -57,7 +55,7 @@ class SkrinUtama : Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         // lock and center camera to player's pos
-        kamera.position.set(player.pos.x, player.pos.y, 0f)
+        kamera.position.set(player.komponenFizik.pos.x, player.komponenFizik.pos.y, 0f)
         kamera.update()
 
         // peta
@@ -65,17 +63,11 @@ class SkrinUtama : Screen {
         renderer.render(intArrayOf(1))
 
         // player
-        player.kemaskini(delta)
-        if (!akanBerlagaDenganLayer(player.nextRect)) {
-            player.setCalculatedPosAsCurrent()
-        }
-        cekMasukPortalLayer(player.nextRect)
+        player.kemaskini(delta, renderer.batch)
 
-        renderer.batch.begin()
-        renderer.batch.draw(player.komponenGrafik.texRegion, player.pos.x, player.pos.y, 1f, 1f)
-        renderer.batch.end()
-        lukisDebugPemain()
-        lukisDebugSpawnlayer()
+        cekMasukPortalLayer(player.komponenFizik.nextRect)
+
+        lukisDebug()
     }
 
     override fun resize(width: Int, height: Int) {}
@@ -109,10 +101,9 @@ class SkrinUtama : Screen {
         val layer = pengurusPeta.portalLayer
         for (i in 0 until layer.objects.count) {
             val obj = layer.objects[i]
-            lukisDebug(obj, Color.GOLD)
             if (obj is RectangleMapObject && rect.overlaps(obj.rectangle)) {
                 val namaPeta = obj.name
-                pengurusPeta.cacheTempatSpawnHampir(player.pos)
+                pengurusPeta.cacheTempatSpawnHampir(player.komponenFizik.pos)
                 pengurusPeta.setupPeta(namaPeta)
                 peta = pengurusPeta.peta
                 renderer.map = peta
@@ -126,61 +117,50 @@ class SkrinUtama : Screen {
                 }
                 kamera.update()
 
-                player.updatePositionsAndBound(pengurusPeta.posisiMula)
-                Gdx.app.debug("SkrinUtama123", "Masuk portal $namaPeta ${player.pos}")
+                player.komponenFizik.updatePositionsAndBound(pengurusPeta.posisiMula)
+                Gdx.app.debug("SkrinUtama123", "Masuk portal $namaPeta ${player.komponenFizik.pos}")
                 return true
             }
         }
         return false
     }
 
-    private fun lukisDebug(obj: MapObject, warna: Color) {
-        obj as RectangleMapObject
+    private fun lukisDebug() {
         shapeRenderer.apply {
             projectionMatrix = kamera.combined
-            begin(ShapeRenderer.ShapeType.Line)
-            color = warna
-            val r = obj.rectangle
-            rect(r.x * kpp, r.y * kpp, r.width * kpp, r.height * kpp)
-            end()
-        }
-    }
-
-    private fun lukisDebugPemain() {
-        shapeRenderer.apply {
-            projectionMatrix = kamera.combined
+            // player
             begin(ShapeRenderer.ShapeType.Filled)
             color = Color.GOLD
-            val r = player.nextRect
+            val r = player.komponenFizik.nextRect
             rect(r.x * kpp, r.y * kpp, r.width * kpp, r.height * kpp)
             end()
-        }
-    }
-
-    private fun lukisDebugSpawnlayer() {
-        val layer = pengurusPeta.spawnsLayer
-        for (i in 0 until layer.objects.count) {
-            val obj = layer.objects[i]
-            lukisDebug(obj, Color.CORAL)
-        }
-    }
-
-    private fun akanBerlagaDenganLayer(rect: Rectangle): Boolean {
-        val layer = pengurusPeta.collisionLayer
-        return akanBerlaga(rect, layer)
-    }
-
-    private fun akanBerlaga(rect: Rectangle, layer: MapLayer): Boolean {
-        // convert bound dalam kaki unit ke pixel
-        rect.setPosition(rect.x / kpp, rect.y / kpp)
-        for (i in 0 until layer.objects.count) {
-            val obj = layer.objects[i]
-            lukisDebug(obj, Color.GREEN)
-            if (obj is RectangleMapObject && rect.overlaps(obj.rectangle)) {
-                return true
+            // layers
+            begin(ShapeRenderer.ShapeType.Line)
+            val layer = pengurusPeta.spawnsLayer
+            for (i in 0 until layer.objects.count) {
+                val obj = layer.objects[i]
+                color = Color.CORAL
+                val s = (obj as RectangleMapObject).rectangle
+                rect(s.x * kpp, s.y * kpp, s.width * kpp, s.height * kpp)
             }
+
+            val layer2 = pengurusPeta.portalLayer
+            for (i in 0 until layer2.objects.count) {
+                val obj = layer2.objects[i]
+                color = Color.GREEN
+                val s2 = (obj as RectangleMapObject).rectangle
+                rect(s2.x * kpp, s2.y * kpp, s2.width * kpp, s2.height * kpp)
+            }
+
+            val layer3 = pengurusPeta.collisionLayer
+            for (i in 0 until layer3.objects.count) {
+                val obj = layer3.objects[i]
+                color = Color.FOREST
+                val s2 = (obj as RectangleMapObject).rectangle
+                rect(s2.x * kpp, s2.y * kpp, s2.width * kpp, s2.height * kpp)
+            }
+            end()
         }
-        return false
     }
 
 }

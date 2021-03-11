@@ -31,26 +31,23 @@ class KomponenInput(private val pemain: Entiti) : InputProcessor {
     }
 
     private fun prosesInput(delta: Float) {
+        if (delta < 0.008f) return
         when {
             kekunci[Kekunci.KIRI] == true -> {
                 pemain.arah = Entiti.Arah.KIRI
                 pemain.gerak = Entiti.Gerak.JALAN
-                pemain.kiraPosisi(delta)
             }
             kekunci[Kekunci.KANAN] == true -> {
                 pemain.arah = Entiti.Arah.KANAN
                 pemain.gerak = Entiti.Gerak.JALAN
-                pemain.kiraPosisi(delta)
             }
             kekunci[Kekunci.ATAS] == true -> {
                 pemain.arah = Entiti.Arah.ATAS
                 pemain.gerak = Entiti.Gerak.JALAN
-                pemain.kiraPosisi(delta)
             }
             kekunci[Kekunci.BAWAH] == true -> {
                 pemain.arah = Entiti.Arah.BAWAH
                 pemain.gerak = Entiti.Gerak.JALAN
-                pemain.kiraPosisi(delta)
             }
             kekunci[Kekunci.QUIT] == true -> {
                 Gdx.app.exit()

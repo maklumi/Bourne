@@ -1,6 +1,7 @@
 package com.ulys
 
 import com.badlogic.gdx.graphics.g2d.Animation
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Array
 
@@ -24,9 +25,19 @@ class KomponenGrafik(private val util: Util, private val entiti: Entiti) {
     private val walkUpAnim = Animation(0.25f, walkUpFrames, Animation.PlayMode.LOOP)
     private val walkDownAnim = Animation(0.25f, walkDownFrames, Animation.PlayMode.LOOP)
 
-    fun kemaskini(delta: Float) {
+    fun kemaskini(delta: Float, entiti: Entiti, batch: Batch) {
         masafrem = (masafrem + delta) % 5
         setCurrentFrame()
+
+        batch.begin()
+        batch.draw(
+            texRegion,
+            entiti.komponenFizik.pos.x,
+            entiti.komponenFizik.pos.y,
+            1f,
+            1f
+        )
+        batch.end()
     }
 
     private fun muatSemuaAnimasi() {
@@ -61,7 +72,6 @@ class KomponenGrafik(private val util: Util, private val entiti: Entiti) {
                 Entiti.Arah.BAWAH -> walkDownAnim.getKeyFrame(0f)
             }
         }
-
     }
 
     fun dispose() {
