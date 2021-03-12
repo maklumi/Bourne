@@ -11,27 +11,23 @@ import com.ulys.Entiti.Gerak
 import com.ulys.Penerima.Mesej
 import com.ulys.PengurusPeta.Companion.kpp
 
-class KomponenFizik(private val pengurusPeta: PengurusPeta) : Penerima {
+abstract class KomponenFizik : Penerima {
 
-    private var pos = Vector2(4f, 4f)
+    protected var pos = Vector2(4f, 4f)
     private var arah = Arah.BAWAH
     private var gerak = Gerak.DIAM
     private val laju = Vector2(5f, 5f)
     private var nextPos = Vector2(pos)
     var nextRect = Rectangle()
 
-    fun kemaskini(delta: Float, entiti: Entiti) {
+    open fun kemaskini(delta: Float, entiti: Entiti, pengurusPeta: PengurusPeta) {
         setNextBoundSize()
-        if (!akanBerlagaDenganLayer(nextRect) && gerak == Gerak.JALAN) {
+        if (!akanBerlagaDenganLayer(nextRect, pengurusPeta) && gerak == Gerak.JALAN) {
             setCalculatedPosAsCurrent()
             entiti.posMesej(Mesej.POS_KINI, toJson(pos))
         }
         if (gerak == Gerak.JALAN) kiraPosisi(delta, arah)
-        cekMasukPortalLayer(nextRect)
-
-        val kamera = pengurusPeta.kamera
-        kamera.position.set(pos.x, pos.y, 0f)
-        kamera.update()
+        cekMasukPortalLayer(nextRect, pengurusPeta)
     }
 
     override fun terima(s: String) {
@@ -79,7 +75,7 @@ class KomponenFizik(private val pengurusPeta: PengurusPeta) : Penerima {
         setNextBoundSize()
     }
 
-    private fun akanBerlagaDenganLayer(rect: Rectangle): Boolean {
+    private fun akanBerlagaDenganLayer(rect: Rectangle, pengurusPeta: PengurusPeta): Boolean {
         val layer = pengurusPeta.collisionLayer
         return akanBerlaga(rect, layer)
     }
@@ -96,7 +92,7 @@ class KomponenFizik(private val pengurusPeta: PengurusPeta) : Penerima {
         return false
     }
 
-    private fun cekMasukPortalLayer(rect: Rectangle): Boolean {
+    private fun cekMasukPortalLayer(rect: Rectangle, pengurusPeta: PengurusPeta): Boolean {
         val layer = pengurusPeta.portalLayer
         for (i in 0 until layer.objects.count) {
             val obj = layer.objects[i]

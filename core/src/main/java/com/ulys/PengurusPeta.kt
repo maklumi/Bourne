@@ -7,7 +7,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector2
 
-class PengurusPeta(private val util: Util) {
+class PengurusPeta {
 
     private val jadualPeta = hashMapOf(
         TOP_WORLD to "maps/topworld.tmx",
@@ -33,10 +33,10 @@ class PengurusPeta(private val util: Util) {
 
     fun setupPeta(nama: String) {
         val path = jadualPeta.getOrDefault(nama, TOWN)
-        util.muatAsetPeta(path)
-        if (util.asetDimuat(path)) {
+        Util.muatAsetPeta(path)
+        if (Util.asetDimuat(path)) {
             namaPeta = nama
-            peta = util.getAsetPeta(path)
+            peta = Util.getAsetPeta(path)
         }
 
         collisionLayer = peta.layers.get(MAP_COLLISION_LAYER)

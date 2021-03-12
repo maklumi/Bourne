@@ -1,18 +1,14 @@
 package com.ulys
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.math.Vector3
-import com.ulys.Entiti.Arah
-import com.ulys.Entiti.Gerak
-import com.ulys.Penerima.Mesej
 
-class KomponenInput(private val entiti: Entiti) : InputProcessor, Penerima {
+abstract class KomponenInput : InputProcessor, Penerima {
 
-    private enum class Kekunci { KIRI, KANAN, ATAS, BAWAH, QUIT }
+    protected enum class Kekunci { KIRI, KANAN, ATAS, BAWAH, QUIT }
 
-    private val kekunci = HashMap<Kekunci, Boolean>().also {
+    protected val kekunci = HashMap<Kekunci, Boolean>().also {
         it[Kekunci.KIRI] = false
         it[Kekunci.KANAN] = false
         it[Kekunci.ATAS] = false
@@ -25,41 +21,9 @@ class KomponenInput(private val entiti: Entiti) : InputProcessor, Penerima {
     private val tetikus = hashMapOf(Tikus.PILIH to false, Tikus.LAKSANA to false)
     private val koordinatTikus = Vector3()
 
-    init {
-        Gdx.input.inputProcessor = this
-    }
-
     override fun terima(s: String) {}
 
-    fun kemaskini(delta: Float) {
-        prosesInput(delta)
-    }
-
-    private fun prosesInput(delta: Float) {
-        if (delta < 0.008f) return
-        when {
-            kekunci[Kekunci.KIRI] == true -> {
-                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.KIRI))
-                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.JALAN))
-            }
-            kekunci[Kekunci.KANAN] == true -> {
-                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.KANAN))
-                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.JALAN))
-            }
-            kekunci[Kekunci.ATAS] == true -> {
-                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.ATAS))
-                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.JALAN))
-            }
-            kekunci[Kekunci.BAWAH] == true -> {
-                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.BAWAH))
-                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.JALAN))
-            }
-            kekunci[Kekunci.QUIT] == true -> {
-                Gdx.app.exit()
-            }
-            else -> entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.DIAM))
-        }
-    }
+    abstract fun kemaskini(delta: Float, entiti: Entiti)
 
     override fun keyDown(keycode: Int): Boolean {
         when (keycode) {

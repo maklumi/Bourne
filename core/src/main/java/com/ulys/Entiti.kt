@@ -3,11 +3,11 @@ package com.ulys
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Rectangle
 
-class Entiti(util: Util, private val pengurusPeta: PengurusPeta) {
-
-    private val komponenInput = KomponenInput(this)
-    private val komponenGrafik = KomponenGrafik(util)
-    private val komponenFizik = KomponenFizik(pengurusPeta)
+class Entiti(
+    private val komponenInput: KomponenInput,
+    private val komponenFizik: KomponenFizik,
+    private val komponenGrafik: KomponenGrafik
+) {
 
     private val lisKomponen = arrayOf(
         komponenInput,
@@ -21,9 +21,9 @@ class Entiti(util: Util, private val pengurusPeta: PengurusPeta) {
     val rect: Rectangle
         get() = komponenFizik.nextRect
 
-    fun kemaskini(delta: Float, batch: Batch) {
-        komponenInput.kemaskini(delta)
-        komponenFizik.kemaskini(delta, this)
+    fun kemaskini(delta: Float, batch: Batch, pengurusPeta: PengurusPeta) {
+        komponenInput.kemaskini(delta, this)
+        komponenFizik.kemaskini(delta, this, pengurusPeta)
         komponenGrafik.kemaskini(delta, this, batch, pengurusPeta)
     }
 

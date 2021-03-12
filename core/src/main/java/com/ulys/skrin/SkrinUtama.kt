@@ -20,7 +20,6 @@ class SkrinUtama : Screen {
     private var peta: TiledMap? = null
     private lateinit var kamera: OrthographicCamera
     private lateinit var renderer: OrthogonalTiledMapRenderer
-    private val util = Util()
 
     private lateinit var player: Entiti
     private lateinit var pengurusPeta: PengurusPeta
@@ -34,16 +33,15 @@ class SkrinUtama : Screen {
         kamera.setToOrtho(false, lebarViewcam, tinggiViewcam)
         kamera.update()
 
-        pengurusPeta = PengurusPeta(util)
+        pengurusPeta = PengurusPeta()
         pengurusPeta.setupPeta(PengurusPeta.TOWN)
         pengurusPeta.kamera = this.kamera
         peta = pengurusPeta.peta
 
-
         renderer = OrthogonalTiledMapRenderer(peta, kpp)
         renderer.setView(pengurusPeta.kamera)
 
-        player = Entiti(util, pengurusPeta)
+        player = Pengeluar.Pemain.get()
         player.posMesej(Penerima.Mesej.POS_MULA, toJson(pengurusPeta.posisiMula))
 
         shapeRenderer = ShapeRenderer()
@@ -61,7 +59,7 @@ class SkrinUtama : Screen {
         renderer.setView(pengurusPeta.kamera)
         renderer.render(intArrayOf(1))
 
-        player.kemaskini(delta, renderer.batch)
+        player.kemaskini(delta, renderer.batch, pengurusPeta)
 
         lukisDebug()
     }
