@@ -1,9 +1,11 @@
 package com.ulys
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.Array
 
 class KGrafikNPC : KomponenGrafik() {
@@ -53,10 +55,23 @@ class KGrafikNPC : KomponenGrafik() {
         batch.begin()
         batch.draw(texRegion, pos.x, pos.y, 1f, 1f)
         batch.end()
+
+        shapeRenderer.apply {
+            projectionMatrix = pengurusPeta.kamera.combined
+            begin(ShapeRenderer.ShapeType.Line)
+            color = Color.YELLOW
+            val r = entiti.rect
+            rect(
+                r.x * PengurusPeta.kpp,
+                r.y * PengurusPeta.kpp,
+                r.width * PengurusPeta.kpp,
+                r.height * PengurusPeta.kpp
+            )
+            end()
+        }
     }
 
     private fun setCurrentFrame() {
-//        gerak = Entiti.Gerak.IMMOBILE
         when (gerak) {
             Entiti.Gerak.JALAN -> {
                 texRegion = when (arah) {
@@ -80,26 +95,9 @@ class KGrafikNPC : KomponenGrafik() {
         }
     }
 
-    private fun buatAnimasi(texture: Texture, points: Array<Pair<Int, Int>>): Animation<TextureRegion> {
-        val textureFrames = TextureRegion.split(texture, Entiti.LEBAR_FREM, Entiti.TINGGI_FREM)
-        val animationKeyFrames = Array<TextureRegion>(points.size)
-        for (point in points) {
-            animationKeyFrames.add(textureFrames[point.first][point.second])
-        }
-        return Animation(0.25f, animationKeyFrames, Animation.PlayMode.LOOP)
-    }
-
-    private fun loadAnimation(
-        texture1: Texture, texture2: Texture, frameIndex: Pair<Int, Int>
-    ): Animation<TextureRegion> {
-        val frames1 = TextureRegion.split(texture1, Entiti.LEBAR_FREM, Entiti.TINGGI_FREM)
-        val frames2 = TextureRegion.split(texture2, Entiti.LEBAR_FREM, Entiti.TINGGI_FREM)
-
-        val animationKeyFrames = Array<TextureRegion>(2)
-
-        animationKeyFrames.add(frames1[frameIndex.first][frameIndex.second])
-        animationKeyFrames.add(frames2[frameIndex.first][frameIndex.second])
-
-        return Animation(0.25f, animationKeyFrames, Animation.PlayMode.LOOP)
+    override fun dispose() {
+        Util.dispose(walkingAnimationSpritePath)
+        Util.dispose(immobileAnimation1)
+        Util.dispose(immobileAnimation2)
     }
 }
