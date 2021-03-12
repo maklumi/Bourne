@@ -1,7 +1,8 @@
 package com.ulys
 
 import com.badlogic.gdx.Gdx
-import com.ulys.Entiti.*
+import com.ulys.Entiti.Arah
+import com.ulys.Entiti.Gerak
 import com.ulys.Penerima.Mesej
 
 class KInputNPC : KomponenInput() {

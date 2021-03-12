@@ -1,12 +1,12 @@
 package com.ulys
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.Array
+import com.ulys.Peta.Companion.kpp
 
 class KGrafikNPC : KomponenGrafik() {
 
@@ -62,10 +62,10 @@ class KGrafikNPC : KomponenGrafik() {
             color = Color.YELLOW
             val r = entiti.rect
             rect(
-                r.x * PengurusPeta.kpp,
-                r.y * PengurusPeta.kpp,
-                r.width * PengurusPeta.kpp,
-                r.height * PengurusPeta.kpp
+                r.x * kpp,
+                r.y * kpp,
+                r.width * kpp,
+                r.height * kpp
             )
             end()
         }

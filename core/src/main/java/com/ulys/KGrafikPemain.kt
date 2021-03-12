@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.Array
-import com.ulys.PengurusPeta.Companion.kpp
+import com.ulys.Peta.Companion.kpp
 
 class KGrafikPemain : KomponenGrafik() {
 

@@ -23,7 +23,7 @@ class SkrinUtama : Screen {
 
     private lateinit var player: Entiti
     private lateinit var pengurusPeta: PengurusPeta
-    private val kpp = PengurusPeta.kpp
+    private val kpp = Peta.kpp
     private lateinit var shapeRenderer: ShapeRenderer
 
     override fun show() {
@@ -34,14 +34,14 @@ class SkrinUtama : Screen {
         kamera.update()
 
         pengurusPeta = PengurusPeta()
-        pengurusPeta.setupPeta(PengurusPeta.TOWN)
+        pengurusPeta.setupPeta(PengeluarPeta.JenisPeta.TOWN)
         pengurusPeta.kamera = this.kamera
-        peta = pengurusPeta.peta
+        peta = pengurusPeta.tiledMap
 
         renderer = OrthogonalTiledMapRenderer(peta, kpp)
         renderer.setView(pengurusPeta.kamera)
 
-        player = Pengeluar.Demo.get()
+        player = Pengeluar.Pemain.get()
         player.posMesej(Penerima.Mesej.POS_MULA, toJson(pengurusPeta.posisiMula))
 
         shapeRenderer = ShapeRenderer()
@@ -53,7 +53,7 @@ class SkrinUtama : Screen {
 
         if (pengurusPeta.berpindah) {
             pengurusPeta.berpindah = false
-            renderer.map = pengurusPeta.peta
+            renderer.map = pengurusPeta.tiledMap
             player.posMesej(Penerima.Mesej.POS_MULA, toJson(pengurusPeta.posisiMula))
         }
         renderer.setView(pengurusPeta.kamera)

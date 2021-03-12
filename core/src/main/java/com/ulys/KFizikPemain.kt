@@ -32,13 +32,13 @@ class KFizikPemain : KomponenFizik() {
             if (obj is RectangleMapObject && rect.overlaps(obj.rectangle)) {
                 val namaPeta = obj.name
                 pengurusPeta.cacheTempatSpawnHampir(pos)
-                pengurusPeta.setupPeta(namaPeta)
+                pengurusPeta.setupPeta(PengeluarPeta.JenisPeta.valueOf(namaPeta))
                 pengurusPeta.berpindah = true
 
-                if (namaPeta == PengurusPeta.TOP_WORLD) {
+                if (namaPeta == PengeluarPeta.JenisPeta.TOP_WORLD.name) {
                     pengurusPeta.kamera = OrthographicCamera(75f, 75f)
                     pengurusPeta.kamera.setToOrtho(false, 75f, 75f)
-                } else if (namaPeta == PengurusPeta.TOWN) {
+                } else if (namaPeta == PengeluarPeta.JenisPeta.TOWN.name) {
                     pengurusPeta.kamera = OrthographicCamera(40f, 30f)
                     pengurusPeta.kamera.setToOrtho(false, 40f, 30f)
                 }

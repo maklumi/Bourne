@@ -8,7 +8,7 @@ import com.ulys.Entiti.Arah
 import com.ulys.Entiti.Gerak
 import com.ulys.KomponenFizik.BoundingBoxLocation.*
 import com.ulys.Penerima.Mesej
-import com.ulys.PengurusPeta.Companion.kpp
+import com.ulys.Peta.Companion.kpp
 
 abstract class KomponenFizik : Penerima {
 
