@@ -35,6 +35,8 @@ class KGrafikPemain : KomponenGrafik() {
                 Penerima.Mesej.POS_KINI -> pos = fromJson(lis[1])
                 Penerima.Mesej.ARAH_KINI -> arah = fromJson(lis[1])
                 Penerima.Mesej.GERAK_KINI -> gerak = fromJson(lis[1])
+                else -> {
+                }
             }
         }
     }

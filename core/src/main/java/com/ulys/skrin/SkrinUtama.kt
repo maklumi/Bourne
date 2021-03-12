@@ -41,7 +41,7 @@ class SkrinUtama : Screen {
         renderer = OrthogonalTiledMapRenderer(peta, kpp)
         renderer.setView(pengurusPeta.kamera)
 
-        player = Pengeluar.Pemain.get()
+        player = Pengeluar.Demo.get()
         player.posMesej(Penerima.Mesej.POS_MULA, toJson(pengurusPeta.posisiMula))
 
         shapeRenderer = ShapeRenderer()

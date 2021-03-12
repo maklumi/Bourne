@@ -6,6 +6,7 @@ interface Penerima {
         POS_MULA, POS_KINI,
         ARAH_KINI,
         GERAK_KINI,
+        BERLAGA_PETA,
     }
 
     fun terima(s: String)

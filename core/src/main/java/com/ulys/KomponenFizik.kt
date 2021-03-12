@@ -22,7 +22,7 @@ abstract class KomponenFizik : Penerima {
 
     open fun kemaskini(delta: Float, entiti: Entiti, pengurusPeta: PengurusPeta) {
         setNextBoundSize()
-        if (!akanBerlagaDenganLayer(nextRect, pengurusPeta) && gerak == Gerak.JALAN) {
+        if (!akanBerlagaDenganLayer(entiti, nextRect, pengurusPeta) && gerak == Gerak.JALAN) {
             setCalculatedPosAsCurrent()
             entiti.posMesej(Mesej.POS_KINI, toJson(pos))
         }
@@ -75,17 +75,18 @@ abstract class KomponenFizik : Penerima {
         setNextBoundSize()
     }
 
-    private fun akanBerlagaDenganLayer(rect: Rectangle, pengurusPeta: PengurusPeta): Boolean {
+    private fun akanBerlagaDenganLayer(entiti: Entiti, rect: Rectangle, pengurusPeta: PengurusPeta): Boolean {
         val layer = pengurusPeta.collisionLayer
-        return akanBerlaga(rect, layer)
+        return akanBerlaga(entiti, rect, layer)
     }
 
-    private fun akanBerlaga(rect: Rectangle, layer: MapLayer): Boolean {
+    private fun akanBerlaga(entiti: Entiti, rect: Rectangle, layer: MapLayer): Boolean {
         // convert bound dalam kaki unit ke pixel
         rect.setPosition(rect.x / kpp, rect.y / kpp)
         for (i in 0 until layer.objects.count) {
             val obj = layer.objects[i]
             if (obj is RectangleMapObject && rect.overlaps(obj.rectangle)) {
+                entiti.posMesej(Mesej.BERLAGA_PETA)
                 return true
             }
         }
