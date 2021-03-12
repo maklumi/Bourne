@@ -12,7 +12,7 @@ sealed class Pengeluar {
 
     object Demo : Pengeluar() {
         override fun get(): Entiti {
-            return Entiti(KInputDemo(), KFizikPemain(), KGrafikPemain())
+            return Entiti(KInputDemo(), KFizikPemain(), KGrafikNPC())
         }
     }
 }

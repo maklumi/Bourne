@@ -16,7 +16,7 @@ class Entiti(
     )
 
     enum class Arah { KIRI, KANAN, ATAS, BAWAH }
-    enum class Gerak { DIAM, JALAN }
+    enum class Gerak { DIAM, JALAN, IMMOBILE }
 
     val rect: Rectangle
         get() = komponenFizik.nextRect
