@@ -2,6 +2,7 @@ package com.ulys
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 
 class Entiti(
@@ -17,7 +18,16 @@ class Entiti(
     )
 
     enum class Arah { KIRI, KANAN, ATAS, BAWAH }
-    enum class Gerak { DIAM, JALAN, IMMOBILE }
+    enum class Gerak {
+        DIAM, JALAN, IMMOBILE;
+
+        companion object {
+            fun randomDiamAtauJalan(): Gerak {
+                return values()[MathUtils.random(values().size - 2)]
+            }
+        }
+    }
+
     enum class AnimationType {
         WALK_LEFT, WALK_RIGHT, WALK_UP, WALK_DOWN,
         IDLE, IMMOBILE

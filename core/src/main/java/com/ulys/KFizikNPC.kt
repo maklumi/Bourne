@@ -18,9 +18,6 @@ class KFizikNPC : KomponenFizik() {
         }
         if (gerak == Entiti.Gerak.JALAN) kiraPosisi(delta, arah)
 
-        val kamera = pengurusPeta.kamera
-        kamera.position.set(pos.x, pos.y, 0f)
-        kamera.update()
     }
 
     private fun berlagaPortalLayer(rect: Rectangle, pengurusPeta: PengurusPeta): Boolean {

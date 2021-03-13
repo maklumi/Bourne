@@ -11,10 +11,6 @@ class KInputNPC : KomponenInput() {
     private var gerak = Gerak.DIAM
     private var masa = 0f
 
-    init {
-        Gdx.input.inputProcessor = this
-    }
-
     override fun kemaskini(delta: Float, entiti: Entiti) {
         if (delta < 1 / 60f) return
         if (kekunci[Kekunci.QUIT] == true) Gdx.app.exit()
@@ -22,7 +18,7 @@ class KInputNPC : KomponenInput() {
         masa += delta
         if (masa > 3) {
             masa = 0f
-            gerak = Gerak.values().random()
+            gerak = Gerak.randomDiamAtauJalan()
             arah = Arah.values().random()
         }
 

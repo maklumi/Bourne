@@ -15,9 +15,9 @@ sealed class Pengeluar {
         }
     }
 
-    object Demo : Pengeluar() {
+    object NPC : Pengeluar() {
         override fun get(): Entiti {
-            return Entiti(KInputDemo(), KFizikNPC(), KGrafikNPC())
+            return Entiti(KInputNPC(), KFizikNPC(), KGrafikNPC())
         }
     }
 }

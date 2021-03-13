@@ -1,6 +1,7 @@
 package com.ulys
 
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector2
@@ -24,5 +25,9 @@ class PengurusPeta {
 
     fun cacheTempatSpawnHampir(pos: Vector2) {
         peta.cacheTempatSpawnHampir(pos)
+    }
+
+    fun updateMapEntities(delta: Float, batch: Batch, pengurusPeta: PengurusPeta) {
+        peta.updateMapEntities(delta, batch, pengurusPeta)
     }
 }

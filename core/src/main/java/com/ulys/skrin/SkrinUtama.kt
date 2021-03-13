@@ -59,6 +59,8 @@ class SkrinUtama : Screen {
         renderer.setView(pengurusPeta.kamera)
         renderer.render(intArrayOf(1))
 
+        pengurusPeta.updateMapEntities(delta, renderer.batch, pengurusPeta)
+
         player.kemaskini(delta, renderer.batch, pengurusPeta)
 
         lukisDebug()

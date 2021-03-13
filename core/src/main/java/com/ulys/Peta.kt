@@ -1,25 +1,25 @@
 package com.ulys
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 
-abstract class Peta(private val jenisPeta: PengeluarPeta.JenisPeta, val pathPeta: String) {
+abstract class Peta(private val jenisPeta: PengeluarPeta.JenisPeta, pathPeta: String) {
 
     lateinit var tiledMap: TiledMap
-    lateinit var collisionLayer: MapLayer
-    lateinit var portalLayer: MapLayer
-    lateinit var spawnsLayer: MapLayer
+    var collisionLayer: MapLayer
+    var portalLayer: MapLayer
+    var spawnsLayer: MapLayer
 
     var posisiMula = Vector2()
+    var posisiMulaNPCs: Array<Vector2>
+    protected val semuaEntiti = Array<Entiti>()
 
     init {
-        setupPeta()
-    }
-
-    private fun setupPeta() {
         Util.muatAsetPeta(pathPeta)
         if (Util.asetDimuat(pathPeta)) {
             tiledMap = Util.getAsetPeta(pathPeta)
@@ -30,6 +30,28 @@ abstract class Peta(private val jenisPeta: PengeluarPeta.JenisPeta, val pathPeta
         spawnsLayer = tiledMap.layers.get(MAP_SPAWNS_LAYER)
 
         cacheTempatSpawnHampir(posisiMula)
+        posisiMulaNPCs = dapatkanLokasiMulaSemuaNPC()
+    }
+
+    open fun updateMapEntities(delta: Float, batch: Batch, pengurusPeta: PengurusPeta) {
+        for (i in 0 until semuaEntiti.size) {
+            semuaEntiti[i].kemaskini(delta, batch, pengurusPeta)
+        }
+    }
+
+    private fun dapatkanLokasiMulaSemuaNPC(): Array<Vector2> {
+        val positions = Array<Vector2>()
+        spawnsLayer.objects.filter { it.name == "NPC_START" }
+            .map {
+                it as RectangleMapObject
+                Vector2(
+                    it.rectangle.x + it.rectangle.width / 2,
+                    it.rectangle.y + it.rectangle.height / 2
+                ) // get center of rectangle
+            }
+            .map { it.scl(kpp) } // convert from map coordinates
+            .forEach { positions.add(it) }
+        return positions
     }
 
     fun cacheTempatSpawnHampir(pos: Vector2) {
