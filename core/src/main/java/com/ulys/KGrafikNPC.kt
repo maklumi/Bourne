@@ -1,5 +1,6 @@
 package com.ulys
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -11,9 +12,14 @@ class KGrafikNPC : KomponenGrafik() {
         masafrem = (masafrem + delta) % 5
         setCurrentFrame()
 
-        batch.begin()
-        batch.draw(texRegion, pos.x, pos.y, 1f, 1f)
-        batch.end()
+        if (texRegion == null) {
+            Gdx.app.debug("KGrafikNPC", "${entiti.konfigurasi?.state}")
+        }
+        texRegion?.let {
+            batch.begin()
+            batch.draw(texRegion, pos.x, pos.y, 1f, 1f)
+            batch.end()
+        }
 
         shapeRenderer.apply {
             projectionMatrix = pengurusPeta.kamera.combined

@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Array
+import java.util.*
 
 abstract class Peta(private val jenisPeta: PengeluarPeta.JenisPeta, pathPeta: String) {
 
@@ -18,6 +19,7 @@ abstract class Peta(private val jenisPeta: PengeluarPeta.JenisPeta, pathPeta: St
     var posisiMula = Vector2()
     var posisiMulaNPCs: Array<Vector2>
     protected val semuaEntiti = Array<Entiti>()
+    protected val jadualPosEntitiSpesyel = Hashtable<String, Vector2>()
 
     init {
         Util.muatAsetPeta(pathPeta)
@@ -31,6 +33,7 @@ abstract class Peta(private val jenisPeta: PengeluarPeta.JenisPeta, pathPeta: St
 
         cacheTempatSpawnHampir(posisiMula)
         posisiMulaNPCs = dapatkanLokasiMulaSemuaNPC()
+        dapatLokasiMulaEntitiSpesyel()
     }
 
     open fun updateMapEntities(delta: Float, batch: Batch, pengurusPeta: PengurusPeta) {
@@ -54,6 +57,22 @@ abstract class Peta(private val jenisPeta: PengeluarPeta.JenisPeta, pathPeta: St
         return positions
     }
 
+    private fun dapatLokasiMulaEntitiSpesyel() {
+        spawnsLayer.objects.filterNot {
+            it.name == "NPC_START" ||
+                    it.name == "PLAYER_START" ||
+                    it.name.isNullOrEmpty()
+        }
+            .forEach {
+                it as RectangleMapObject
+                val lokasi = Vector2(
+                    it.rectangle.x + it.rectangle.width / 2,
+                    it.rectangle.y + it.rectangle.height / 2
+                ).scl(kpp)
+                jadualPosEntitiSpesyel[it.name] = lokasi
+            }
+    }
+
     fun cacheTempatSpawnHampir(pos: Vector2) {
         val posPemain = pos.cpy().scl(1 / kpp)
         val rectVector = Vector2()
@@ -69,7 +88,7 @@ abstract class Peta(private val jenisPeta: PengeluarPeta.JenisPeta, pathPeta: St
                 if (distance < jarakTerdekat) {
                     spawnPos.set(rectVector.scl(kpp))
                     jarakTerdekat = distance
-                    Gdx.app.debug("Peta", "closest START is: $spawnPos in $jenisPeta")
+//                    Gdx.app.debug("Peta", "closest START is: $spawnPos in $jenisPeta")
                 }
             }
         }

@@ -2,26 +2,26 @@ package com.ulys
 
 class KInputDemo : KomponenInput() {
 
-    private var arah = Entiti.Arah.ATAS
+    private var arah = Entiti.Arah.UP
 
     override fun kemaskini(delta: Float, entiti: Entiti) {
         if (delta < 1 / 60f) return
         when (arah) {
-            Entiti.Arah.KIRI -> {
-                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.KIRI))
-                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.JALAN))
+            Entiti.Arah.LEFT -> {
+                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.LEFT))
+                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.WALKING))
             }
-            Entiti.Arah.KANAN -> {
-                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.KANAN))
-                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.JALAN))
+            Entiti.Arah.RIGHT -> {
+                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.RIGHT))
+                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.WALKING))
             }
-            Entiti.Arah.ATAS -> {
-                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.ATAS))
-                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.JALAN))
+            Entiti.Arah.UP -> {
+                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.UP))
+                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.WALKING))
             }
-            Entiti.Arah.BAWAH -> {
-                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.BAWAH))
-                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.JALAN))
+            Entiti.Arah.DOWN -> {
+                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.DOWN))
+                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.WALKING))
             }
         }
     }

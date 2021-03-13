@@ -13,8 +13,8 @@ import com.ulys.Peta.Companion.kpp
 abstract class KomponenFizik : Penerima {
 
     protected var pos = Vector2(4f, 4f)
-    protected var arah = Arah.BAWAH
-    protected var gerak = Gerak.DIAM
+    protected var arah = Arah.DOWN
+    protected var gerak = Gerak.IDLE
     private val laju = Vector2(5f, 5f)
     protected var nextPos = Vector2(pos)
     var nextRect = Rectangle()
@@ -45,10 +45,10 @@ abstract class KomponenFizik : Penerima {
         val tempPos = Vector2(pos)
         laju.scl(delta)
         when (arah) {
-            Arah.KIRI -> tempPos.x -= laju.x
-            Arah.KANAN -> tempPos.x += laju.x
-            Arah.ATAS -> tempPos.y += laju.y
-            Arah.BAWAH -> tempPos.y -= laju.y
+            Arah.LEFT -> tempPos.x -= laju.x
+            Arah.RIGHT -> tempPos.x += laju.x
+            Arah.UP -> tempPos.y += laju.y
+            Arah.DOWN -> tempPos.y -= laju.y
         }
         nextPos.set(tempPos)
         laju.scl(1 / delta)

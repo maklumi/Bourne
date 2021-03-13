@@ -4,8 +4,8 @@ interface Penerima {
 
     enum class Mesej {
         POS_MULA, POS_KINI,
-        ARAH_KINI,
-        GERAK_KINI,
+        ARAH_MULA, ARAH_KINI,
+        GERAK_MULA, GERAK_KINI,
         BERLAGA_PETA,
         MUAT_ANIMASI,
     }

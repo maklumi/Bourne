@@ -7,13 +7,19 @@ import com.ulys.Penerima.Mesej
 
 class KInputNPC : KomponenInput() {
 
-    private var arah = Arah.ATAS
-    private var gerak = Gerak.DIAM
+    private var arah = Arah.UP
+    private var gerak = Gerak.IDLE
     private var masa = 0f
 
     override fun kemaskini(delta: Float, entiti: Entiti) {
         if (delta < 1 / 60f) return
         if (kekunci[Kekunci.QUIT] == true) Gdx.app.exit()
+
+        // kalau entiti IMMOBILE tak perlu update
+        if (gerak == Gerak.IMMOBILE) {
+            entiti.posMesej(Mesej.GERAK_KINI, toJson(gerak))
+            return
+        }
 
         masa += delta
         if (masa > 3) {
@@ -22,30 +28,27 @@ class KInputNPC : KomponenInput() {
             arah = Arah.values().random()
         }
 
-        if (gerak == Gerak.IMMOBILE) {
-            entiti.posMesej(Mesej.GERAK_KINI, toJson(gerak))
-            return
-        } else if (gerak == Gerak.DIAM) {
+        if (gerak == Gerak.IDLE) {
             entiti.posMesej(Mesej.GERAK_KINI, toJson(gerak))
             return
         }
 
         when (arah) {
-            Arah.KIRI -> {
-                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.KIRI))
-                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.JALAN))
+            Arah.LEFT -> {
+                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.LEFT))
+                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.WALKING))
             }
-            Arah.KANAN -> {
-                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.KANAN))
-                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.JALAN))
+            Arah.RIGHT -> {
+                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.RIGHT))
+                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.WALKING))
             }
-            Arah.ATAS -> {
-                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.ATAS))
-                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.JALAN))
+            Arah.UP -> {
+                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.UP))
+                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.WALKING))
             }
-            Arah.BAWAH -> {
-                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.BAWAH))
-                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.JALAN))
+            Arah.DOWN -> {
+                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.DOWN))
+                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.WALKING))
             }
         }
     }
@@ -56,6 +59,14 @@ class KInputNPC : KomponenInput() {
         if (lis.size == 1) {
             if (Mesej.BERLAGA_PETA == Mesej.valueOf(lis.first())) {
                 arah = getArahSelain(arah)
+            }
+        }
+
+        if (lis.size == 2) {
+            if (Mesej.GERAK_MULA == Mesej.valueOf(lis[0])) {
+                gerak = j.fromJson(Gerak::class.java, lis[1])
+            } else if (Mesej.ARAH_MULA == Mesej.valueOf(lis[0])) {
+                arah = j.fromJson(Arah::class.java, lis[1])
             }
         }
     }

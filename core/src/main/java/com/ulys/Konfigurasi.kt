@@ -6,9 +6,12 @@ import com.ulys.Entiti.AnimationType
 
 class Konfigurasi {
 
+    var state: Entiti.Gerak = Entiti.Gerak.IDLE
+    var direction: Entiti.Arah = Entiti.Arah.DOWN
     var animationConfig: Array<AnimationConfig> = Array()
 
     class AnimationConfig {
+        var frameDuration: Float = 1f
         var animationType: AnimationType = AnimationType.IDLE
         var texturePaths: Array<String> = Array()
         var gridPoints: Array<GridPoint2> = Array()

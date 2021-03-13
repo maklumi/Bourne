@@ -12,11 +12,11 @@ class KFizikNPC : KomponenFizik() {
 
         if (!akanBerlagaDenganLayer(entiti, nextRect, pengurusPeta.collisionLayer)
             && !berlagaPortalLayer(nextRect, pengurusPeta)
-            && gerak == Entiti.Gerak.JALAN
+            && gerak == Entiti.Gerak.WALKING
         ) {
             setCalculatedPosAsCurrent(entiti)
         }
-        if (gerak == Entiti.Gerak.JALAN) kiraPosisi(delta, arah)
+        if (gerak == Entiti.Gerak.WALKING) kiraPosisi(delta, arah)
 
     }
 

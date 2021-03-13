@@ -17,9 +17,9 @@ class Entiti(
         komponenFizik
     )
 
-    enum class Arah { KIRI, KANAN, ATAS, BAWAH }
+    enum class Arah { LEFT, RIGHT, UP, DOWN }
     enum class Gerak {
-        DIAM, JALAN, IMMOBILE;
+        IDLE, WALKING, IMMOBILE;
 
         companion object {
             fun randomDiamAtauJalan(): Gerak {

@@ -16,25 +16,25 @@ class KInputPemain : KomponenInput() {
         if (delta < 0.008f) return
         when {
             kekunci[Kekunci.KIRI] == true -> {
-                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.KIRI))
-                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.JALAN))
+                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.LEFT))
+                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.WALKING))
             }
             kekunci[Kekunci.KANAN] == true -> {
-                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.KANAN))
-                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.JALAN))
+                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.RIGHT))
+                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.WALKING))
             }
             kekunci[Kekunci.ATAS] == true -> {
-                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.ATAS))
-                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.JALAN))
+                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.UP))
+                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.WALKING))
             }
             kekunci[Kekunci.BAWAH] == true -> {
-                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.BAWAH))
-                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.JALAN))
+                entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.DOWN))
+                entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.WALKING))
             }
             kekunci[Kekunci.QUIT] == true -> {
                 Gdx.app.exit()
             }
-            else -> entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.DIAM))
+            else -> entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.IDLE))
         }
     }
 

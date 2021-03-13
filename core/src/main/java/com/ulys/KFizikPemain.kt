@@ -12,11 +12,11 @@ class KFizikPemain : KomponenFizik() {
         setNextBoundSize(0.3f, 0.5f)
 
         if (!akanBerlagaDenganLayer(entiti, nextRect, pengurusPeta.collisionLayer)
-            && gerak == Entiti.Gerak.JALAN
+            && gerak == Entiti.Gerak.WALKING
         ) {
             setCalculatedPosAsCurrent(entiti)
         }
-        if (gerak == Entiti.Gerak.JALAN) kiraPosisi(delta, arah)
+        if (gerak == Entiti.Gerak.WALKING) kiraPosisi(delta, arah)
 
         cekMasukPortalLayer(nextRect, pengurusPeta)
 
