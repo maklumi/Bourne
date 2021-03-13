@@ -7,6 +7,7 @@ interface Penerima {
         ARAH_KINI,
         GERAK_KINI,
         BERLAGA_PETA,
+        MUAT_ANIMASI,
     }
 
     fun terima(s: String)

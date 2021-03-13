@@ -1,5 +1,6 @@
 package com.ulys
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Rectangle
 
@@ -17,9 +18,19 @@ class Entiti(
 
     enum class Arah { KIRI, KANAN, ATAS, BAWAH }
     enum class Gerak { DIAM, JALAN, IMMOBILE }
+    enum class AnimationType {
+        WALK_LEFT, WALK_RIGHT, WALK_UP, WALK_DOWN,
+        IDLE, IMMOBILE
+    }
 
     val rect: Rectangle
         get() = komponenFizik.nextRect
+
+    var konfigurasi: Konfigurasi? = null
+
+    fun muatKonfigurasiGrafik(path: String) {
+        konfigurasi = j.fromJson(Konfigurasi::class.java, Gdx.files.internal(path))
+    }
 
     fun kemaskini(delta: Float, batch: Batch, pengurusPeta: PengurusPeta) {
         komponenInput.kemaskini(delta, this)
