@@ -1,6 +1,8 @@
 package com.ulys.ui
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.g2d.NinePatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.*
@@ -8,7 +10,8 @@ import com.badlogic.gdx.utils.Align
 
 class StatusUI : Group() {
     private val textureAtlas = TextureAtlas("skins/statusui.pack")
-    private val hudBackground = Image(textureAtlas.findRegion("HUD_Background"))
+    private val background = NinePatch(textureAtlas.findRegion("dialog"))
+    private val hudBackground = Image(background)
     private val skin = Skin().also { it.load(Gdx.files.internal("skins/uiskin.json")) }
     private val hpBar = Image(textureAtlas.findRegion("HP_Bar"))
     private val mpBar = Image(textureAtlas.findRegion("MP_Bar"))
@@ -21,6 +24,8 @@ class StatusUI : Group() {
     private var xp = 0
 
     init {
+
+        hudBackground.setSize(265f, 135f)
 
         val bar = Image(textureAtlas.findRegion("Bar"))
         val groupHealth = WidgetGroup()
@@ -74,18 +79,21 @@ class StatusUI : Group() {
         val goldVal = Label(gold.toString(), skin)
         table.add(goldVal)
 
-//        table.debug()
-        table.setPosition(135f, 68f)
+        table.debugTable()
         table.setFillParent(true)
-
+        table.setPosition(hudBackground.width / 2, hudBackground.height / 2)
         addActor(hudBackground)
         addActor(table)
+        Gdx.app.debug(
+            "StatusUI",
+            "table position (${hudBackground.width}, ${hudBackground.height}), w:${table.width}, h:${table.height}"
+        )
+
     }
 
-    /*
-      override fun draw(batch: Batch, parentAlpha: Float) {
-          super.draw(batch, parentAlpha)
-          batch.draw(hudBackgroundImage, 0f, 0f, 4f, 3f)
-      }
-  */
+    override fun draw(batch: Batch, parentAlpha: Float) {
+        super.draw(batch, parentAlpha)
+//        background.draw(batch, 0f, 0f, 600f, 400f)
+    }
+
 }

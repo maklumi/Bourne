@@ -30,10 +30,6 @@ class SkrinUtama : Screen {
     private lateinit var shapeRenderer: ShapeRenderer
 
     override fun show() {
-        hudKamera = OrthographicCamera()
-        hudKamera.setToOrtho(false,lebarWindow,tinggiWindow)
-        hud = HUD(hudKamera)
-
         setupViewport()
 
         kamera = OrthographicCamera(lebarWindow, tinggiWindow)
@@ -53,6 +49,10 @@ class SkrinUtama : Screen {
         player.posMesej(Penerima.Mesej.POS_MULA, toJson(pengurusPeta.posisiMula))
 
         shapeRenderer = ShapeRenderer()
+
+        hudKamera = OrthographicCamera()
+        hudKamera.setToOrtho(false, lebarWindow, tinggiWindow)
+        hud = HUD(hudKamera)
     }
 
     override fun render(delta: Float) {
