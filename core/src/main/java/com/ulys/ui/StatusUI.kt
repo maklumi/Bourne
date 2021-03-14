@@ -9,10 +9,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
 
 class StatusUI : Group() {
-    private val textureAtlas = TextureAtlas("skins/statusui.pack")
+    private val textureAtlas = TextureAtlas("skins/statusui.atlas")
     private val background = NinePatch(textureAtlas.findRegion("dialog"))
     private val hudBackground = Image(background)
-    private val skin = Skin().also { it.load(Gdx.files.internal("skins/uiskin.json")) }
+    private val skin = Skin().also {
+        it.load(Gdx.files.internal("skins/statusui.json"))
+        it.addRegions(textureAtlas)
+    }
     private val hpBar = Image(textureAtlas.findRegion("HP_Bar"))
     private val mpBar = Image(textureAtlas.findRegion("MP_Bar"))
     private val xpBar = Image(textureAtlas.findRegion("XP_Bar"))
@@ -25,7 +28,7 @@ class StatusUI : Group() {
 
     init {
 
-        hudBackground.setSize(265f, 135f)
+        hudBackground.setSize(270f, 135f)
 
         val bar = Image(textureAtlas.findRegion("Bar"))
         val groupHealth = WidgetGroup()
@@ -81,7 +84,8 @@ class StatusUI : Group() {
 
         table.debugTable()
         table.setFillParent(true)
-        table.setPosition(hudBackground.width / 2, hudBackground.height / 2)
+//        table.setPosition(hudBackground.width / 2, hudBackground.height / 2)
+        table.padLeft(265f).padBottom(130f)
         addActor(hudBackground)
         addActor(table)
         Gdx.app.debug(

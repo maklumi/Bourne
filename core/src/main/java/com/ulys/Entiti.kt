@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.JsonValue
 import java.util.*
 
 class Entiti(
-    private val komponenInput: KomponenInput,
+    val komponenInput: KomponenInput,
     private val komponenFizik: KomponenFizik,
     private val komponenGrafik: KomponenGrafik
 ) {

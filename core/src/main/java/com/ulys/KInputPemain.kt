@@ -1,13 +1,8 @@
 package com.ulys
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.math.Vector3
 
 class KInputPemain : KomponenInput() {
-
-    init {
-        Gdx.input.inputProcessor = this
-    }
 
     override fun kemaskini(delta: Float, entiti: Entiti) {
         prosesInput(delta, entiti)

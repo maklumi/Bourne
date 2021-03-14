@@ -19,7 +19,7 @@ object Util {
             man.setLoader(TiledMap::class.java, TmxMapLoader(resolver))
             man.load(path, TiledMap::class.java)
             man.finishLoadingAsset<TiledMap>(path)
-            Gdx.app.debug("Util19", "Peta dimuat: $path")
+//            Gdx.app.debug("Util19", "Peta dimuat: $path")
         } else {
             Gdx.app.debug("Util21", "Peta gagal dimuat: $path")
         }
@@ -40,7 +40,7 @@ object Util {
             man.setLoader(Texture::class.java, TextureLoader(resolver))
             man.load(path, Texture::class.java)
             man.finishLoadingAsset<Texture>(path)
-            Gdx.app.debug("Util42", "Tekstur dimuat: $path")
+//            Gdx.app.debug("Util42", "Tekstur dimuat: $path")
         } else {
             Gdx.app.debug("Util44", "Tekstur gagal dimuat: $path")
         }

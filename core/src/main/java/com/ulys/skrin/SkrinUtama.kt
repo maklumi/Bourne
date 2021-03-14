@@ -1,6 +1,7 @@
 package com.ulys.skrin
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
@@ -53,6 +54,11 @@ class SkrinUtama : Screen {
         hudKamera = OrthographicCamera()
         hudKamera.setToOrtho(false, lebarWindow, tinggiWindow)
         hud = HUD(hudKamera)
+
+        val multiplexer = InputMultiplexer()
+        multiplexer.addProcessor(hud.stage)
+        multiplexer.addProcessor(player.komponenInput)
+        Gdx.input.inputProcessor = multiplexer
     }
 
     override fun render(delta: Float) {

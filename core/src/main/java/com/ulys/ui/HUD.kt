@@ -11,7 +11,7 @@ class HUD(camera: Camera) : Screen {
 
     private val viewport = ScreenViewport(camera)
     private val statusUI = StatusUI()
-    private val stage = Stage(viewport).also {
+    val stage = Stage(viewport).also {
         it.addActor(statusUI)
     }
 
