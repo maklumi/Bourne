@@ -82,7 +82,9 @@ class SkrinUtama : Screen {
         hud.render(delta)
     }
 
-    override fun resize(width: Int, height: Int) {}
+    override fun resize(width: Int, height: Int) {
+        hud.resize(width, height)
+    }
 
     override fun pause() {}
 

@@ -1,21 +1,12 @@
 package com.ulys.ui
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
-import com.badlogic.gdx.graphics.g2d.NinePatch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
-import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
 
-class StatusUI : Group() {
-    private val textureAtlas = TextureAtlas("skins/statusui.atlas")
-    private val background = NinePatch(textureAtlas.findRegion("dialog"))
-    private val hudBackground = Image(background)
-    private val skin = Skin().also {
-        it.load(Gdx.files.internal("skins/statusui.json"))
-        it.addRegions(textureAtlas)
-    }
+class StatusUI(skin: Skin, textureAtlas: TextureAtlas) : Window("statistik", skin) {
+
     private val hpBar = Image(textureAtlas.findRegion("HP_Bar"))
     private val mpBar = Image(textureAtlas.findRegion("MP_Bar"))
     private val xpBar = Image(textureAtlas.findRegion("XP_Bar"))
@@ -27,72 +18,59 @@ class StatusUI : Group() {
     private var xp = 0
 
     init {
-
-        hudBackground.setSize(270f, 135f)
-
         val bar = Image(textureAtlas.findRegion("Bar"))
         val groupHealth = WidgetGroup()
         groupHealth.addActor(bar)
         groupHealth.addActor(hpBar)
         hpBar.setPosition(3f, 6f)
 
-        val table = Table()
-        val cell = table.add(groupHealth)
-        cell.width(bar.width)
-        cell.height(bar.height)
-        table.add(Label(" hp:", skin))
-        table.add(Label(hp.toString(), skin))
-        table.row()
-
         val bar2 = Image(textureAtlas.findRegion("Bar"))
         val groupMagic = WidgetGroup()
         mpBar.setPosition(3f, 6f)
         groupMagic.addActor(bar2)
         groupMagic.addActor(mpBar)
-        val cell2 = table.add(groupMagic)
-        cell2.width(bar2.width)
-        cell2.height(bar2.height)
+
         val mpLabel = Label(" mp:", skin)
-        table.add(mpLabel)
         val mp = Label(mp.toString(), skin)
-        table.add(mp)
-        table.row()
 
         val groupXp = WidgetGroup()
         xpBar.setPosition(3f, 6f)
         val bar3 = Image(textureAtlas.findRegion("Bar"))
         groupXp.addActor(bar3)
         groupXp.addActor(xpBar)
-        val cell3 = table.add(groupXp)
-        cell3.width(bar3.width)
-        cell3.height(bar3.height)
+
         val xpLabel = Label(" xp:", skin)
-        table.add(xpLabel)
         val xp = Label(xp.toString(), skin)
-        table.add(xp)
-        table.row()
 
         val levelLabel = Label("lv:", skin)
-        table.add(levelLabel)
         val levelVal = Label(level.toString(), skin)
-        table.add(levelVal).align(Align.left)
 
         val goldLabel = Label("gp: ", skin)
-        table.add(goldLabel)
         val goldVal = Label(gold.toString(), skin)
-        table.add(goldVal)
 
-        table.debugTable()
-        table.setFillParent(true)
-//        table.setPosition(hudBackground.width / 2, hudBackground.height / 2)
-        table.padLeft(265f).padBottom(130f)
-        addActor(hudBackground)
-        addActor(table)
-        Gdx.app.debug(
-            "StatusUI",
-            "table position (${hudBackground.width}, ${hudBackground.height}), w:${table.width}, h:${table.height}"
-        )
+        add(groupHealth).size(bar.width, bar.height)
+        add(Label(" hp:", skin))
+        add(Label(hp.toString(), skin)).align(Align.left)
+        row()
 
+        add(groupMagic).size(bar2.width, bar2.height)
+        add(mpLabel)
+        add(mp).align(Align.left)
+        row()
+
+        add(groupXp).size(bar3.width, bar3.height)
+        add(xpLabel)
+        add(xp).align(Align.left)
+        row()
+
+        add(levelLabel)
+        add(levelVal).align(Align.left)
+        add(goldLabel)
+        add(goldVal).align(Align.left)
+        pad(40f)
+        pack()
+//        debugTable()
+//        debug()
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
