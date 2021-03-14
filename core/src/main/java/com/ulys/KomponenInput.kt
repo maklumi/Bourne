@@ -18,8 +18,8 @@ abstract class KomponenInput : InputProcessor, Penerima {
 
     enum class Tikus { PILIH, LAKSANA }
 
-    private val tetikus = hashMapOf(Tikus.PILIH to false, Tikus.LAKSANA to false)
-    private val koordinatTikus = Vector3()
+    protected val tetikus = hashMapOf(Tikus.PILIH to false, Tikus.LAKSANA to false)
+    protected val koordinatTikus = Vector3()
 
     override fun terima(s: String) {}
 

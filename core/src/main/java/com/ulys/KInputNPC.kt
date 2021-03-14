@@ -1,6 +1,7 @@
 package com.ulys
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.MathUtils
 import com.ulys.Entiti.Arah
 import com.ulys.Entiti.Gerak
 import com.ulys.Penerima.Mesej
@@ -22,7 +23,7 @@ class KInputNPC : KomponenInput() {
         }
 
         masa += delta
-        if (masa > 3) {
+        if (masa > MathUtils.random(1, 5)) {
             masa = 0f
             gerak = Gerak.randomDiamAtauJalan()
             arah = Arah.values().random()

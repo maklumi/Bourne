@@ -8,6 +8,9 @@ interface Penerima {
         GERAK_MULA, GERAK_KINI,
         BERLAGA_PETA, BERLAGA_ENTITI,
         MUAT_ANIMASI,
+        PEMILIHAN_MULA,
+        ENTITI_DIPILIH,
+        ENTITI_TAK_DIPILIH,
     }
 
     fun terima(s: String)

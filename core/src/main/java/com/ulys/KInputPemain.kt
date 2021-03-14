@@ -1,6 +1,7 @@
 package com.ulys
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.Vector3
 
 class KInputPemain : KomponenInput() {
 
@@ -35,6 +36,13 @@ class KInputPemain : KomponenInput() {
                 Gdx.app.exit()
             }
             else -> entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.IDLE))
+        }
+
+        // input dari mouse
+        if (tetikus[Tikus.PILIH] == true) {
+            Gdx.app.debug("KInputPemain", "Koord skrin (${koordinatTikus.x},${koordinatTikus.y})")
+            entiti.posMesej(Penerima.Mesej.PEMILIHAN_MULA, j.toJson(koordinatTikus))
+            tetikus[Tikus.PILIH] = false
         }
     }
 
