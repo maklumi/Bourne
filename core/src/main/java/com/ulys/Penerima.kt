@@ -6,7 +6,7 @@ interface Penerima {
         POS_MULA, POS_KINI,
         ARAH_MULA, ARAH_KINI,
         GERAK_MULA, GERAK_KINI,
-        BERLAGA_PETA,
+        BERLAGA_PETA, BERLAGA_ENTITI,
         MUAT_ANIMASI,
     }
 

@@ -12,6 +12,7 @@ class KFizikPemain : KomponenFizik() {
         setNextBoundSize(0.3f, 0.5f)
 
         if (!akanBerlagaDenganLayer(entiti, nextRect, pengurusPeta.collisionLayer)
+            && !akanBerlagaEntiti(entiti, pengurusPeta.semuaEntiti)
             && gerak == Entiti.Gerak.WALKING
         ) {
             setCalculatedPosAsCurrent(entiti)

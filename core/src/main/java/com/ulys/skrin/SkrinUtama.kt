@@ -42,6 +42,7 @@ class SkrinUtama : Screen {
         renderer.setView(pengurusPeta.kamera)
 
         player = Pengeluar.Pemain.get()
+        pengurusPeta.entitiPemain.add(player)
         player.posMesej(Penerima.Mesej.POS_MULA, toJson(pengurusPeta.posisiMula))
 
         shapeRenderer = ShapeRenderer()

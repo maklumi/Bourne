@@ -12,6 +12,8 @@ class KFizikNPC : KomponenFizik() {
 
         if (!akanBerlagaDenganLayer(entiti, nextRect, pengurusPeta.collisionLayer)
             && !berlagaPortalLayer(nextRect, pengurusPeta)
+            && !akanBerlagaEntiti(entiti, pengurusPeta.semuaEntiti)
+            && !akanBerlagaEntiti(entiti, pengurusPeta.entitiPemain)
             && gerak == Entiti.Gerak.WALKING
         ) {
             setCalculatedPosAsCurrent(entiti)
@@ -25,5 +27,6 @@ class KFizikNPC : KomponenFizik() {
         return mapObjects.filterIsInstance(RectangleMapObject::class.java)
             .any { rect.overlaps(it.rectangle) }
     }
+
 
 }

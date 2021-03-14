@@ -18,7 +18,7 @@ abstract class Peta(private val jenisPeta: PengeluarPeta.JenisPeta, pathPeta: St
 
     var posisiMula = Vector2()
     var posisiMulaNPCs: Array<Vector2>
-    protected val semuaEntiti = Array<Entiti>()
+    val semuaEntiti = Array<Entiti>()
     protected val jadualPosEntitiSpesyel = Hashtable<String, Vector2>()
 
     init {

@@ -33,23 +33,15 @@ class KInputNPC : KomponenInput() {
             return
         }
 
+        if (gerak == Gerak.WALKING) {
+            entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.WALKING))
+        }
+
         when (arah) {
-            Arah.LEFT -> {
-                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.LEFT))
-                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.WALKING))
-            }
-            Arah.RIGHT -> {
-                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.RIGHT))
-                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.WALKING))
-            }
-            Arah.UP -> {
-                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.UP))
-                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.WALKING))
-            }
-            Arah.DOWN -> {
-                entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.DOWN))
-                entiti.posMesej(Mesej.GERAK_KINI, toJson(Gerak.WALKING))
-            }
+            Arah.LEFT -> entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.LEFT))
+            Arah.RIGHT -> entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.RIGHT))
+            Arah.UP -> entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.UP))
+            Arah.DOWN -> entiti.posMesej(Mesej.ARAH_KINI, toJson(Arah.DOWN))
         }
     }
 
@@ -59,6 +51,8 @@ class KInputNPC : KomponenInput() {
         if (lis.size == 1) {
             if (Mesej.BERLAGA_PETA == Mesej.valueOf(lis.first())) {
                 arah = getArahSelain(arah)
+            } else if (Mesej.BERLAGA_ENTITI == Mesej.valueOf(lis.first())) {
+                gerak = Gerak.IDLE
             }
         }
 

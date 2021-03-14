@@ -48,68 +48,68 @@ abstract class KomponenGrafik : Penerima {
     }
 
     protected fun setCurrentFrame() {
-        texRegion = when (arah) {
+        when (arah) {
             Entiti.Arah.LEFT -> {
-                when (gerak) {
+                texRegion = when (gerak) {
                     Entiti.Gerak.IDLE -> {
-                        val anim = animations[Entiti.AnimationType.WALK_LEFT]
-                        anim?.getKeyFrame(0f)
+                        val anim = animations[Entiti.AnimationType.WALK_LEFT] ?: return
+                        anim.getKeyFrame(0f)
                     }
                     Entiti.Gerak.WALKING -> {
-                        val anim = animations[Entiti.AnimationType.WALK_LEFT]
-                        anim?.getKeyFrame(masafrem)
+                        val anim = animations[Entiti.AnimationType.WALK_LEFT] ?: return
+                        anim.getKeyFrame(masafrem)
                     }
                     Entiti.Gerak.IMMOBILE -> {
-                        val anim = animations[Entiti.AnimationType.IMMOBILE]
-                        anim?.getKeyFrame(masafrem)
+                        val anim = animations[Entiti.AnimationType.IMMOBILE] ?: return
+                        anim.getKeyFrame(masafrem)
                     }
                 }
             }
             Entiti.Arah.RIGHT -> {
-                when (gerak) {
+                texRegion = when (gerak) {
                     Entiti.Gerak.IDLE -> {
-                        val anim = animations[Entiti.AnimationType.WALK_RIGHT]
-                        anim?.getKeyFrame(0f)
+                        val anim = animations[Entiti.AnimationType.WALK_RIGHT] ?: return
+                        anim.getKeyFrame(0f)
                     }
                     Entiti.Gerak.WALKING -> {
-                        val anim = animations[Entiti.AnimationType.WALK_RIGHT]
-                        anim?.getKeyFrame(masafrem)
+                        val anim = animations[Entiti.AnimationType.WALK_RIGHT] ?: return
+                        anim.getKeyFrame(masafrem)
                     }
                     Entiti.Gerak.IMMOBILE -> {
-                        val anim = animations[Entiti.AnimationType.IMMOBILE]
-                        anim?.getKeyFrame(masafrem)
+                        val anim = animations[Entiti.AnimationType.IMMOBILE] ?: return
+                        anim.getKeyFrame(masafrem)
                     }
                 }
             }
             Entiti.Arah.UP -> {
-                when (gerak) {
+                texRegion = when (gerak) {
                     Entiti.Gerak.IDLE -> {
-                        val anim = animations[Entiti.AnimationType.WALK_UP]
-                        anim?.getKeyFrame(0f)
+                        val anim = animations[Entiti.AnimationType.WALK_UP] ?: return
+                        anim.getKeyFrame(0f)
                     }
                     Entiti.Gerak.WALKING -> {
-                        val anim = animations[Entiti.AnimationType.WALK_UP]
-                        anim?.getKeyFrame(masafrem)
+                        val anim = animations[Entiti.AnimationType.WALK_UP] ?: return
+                        anim.getKeyFrame(masafrem)
                     }
                     Entiti.Gerak.IMMOBILE -> {
-                        val anim = animations[Entiti.AnimationType.IMMOBILE]
-                        anim?.getKeyFrame(masafrem)
+                        val anim = animations[Entiti.AnimationType.IMMOBILE] ?: return
+                        anim.getKeyFrame(masafrem)
                     }
                 }
             }
             Entiti.Arah.DOWN -> {
-                when (gerak) {
+                texRegion = when (gerak) {
                     Entiti.Gerak.IDLE -> {
-                        val anim = animations[Entiti.AnimationType.WALK_DOWN]
-                        anim?.getKeyFrame(0f)
+                        val anim = animations[Entiti.AnimationType.WALK_DOWN] ?: return
+                        anim.getKeyFrame(0f)
                     }
                     Entiti.Gerak.WALKING -> {
-                        val anim = animations[Entiti.AnimationType.WALK_DOWN]
-                        anim?.getKeyFrame(masafrem)
+                        val anim = animations[Entiti.AnimationType.WALK_DOWN] ?: return
+                        anim.getKeyFrame(masafrem)
                     }
                     Entiti.Gerak.IMMOBILE -> {
-                        val anim = animations[Entiti.AnimationType.IMMOBILE]
-                        anim?.getKeyFrame(masafrem)
+                        val anim = animations[Entiti.AnimationType.IMMOBILE] ?: return
+                        anim.getKeyFrame(masafrem)
                     }
                 }
             }
@@ -117,7 +117,7 @@ abstract class KomponenGrafik : Penerima {
     }
 
     /*
-        protected fun setCurrentFrame2() {
+        protected fun setCurrentFrame() {
             when (gerak) {
                 Entiti.Gerak.WALKING -> {
                     texRegion = when (arah) {
@@ -161,7 +161,7 @@ abstract class KomponenGrafik : Penerima {
                 }
                 Entiti.Gerak.IMMOBILE -> {
                     val anim = animations[Entiti.AnimationType.IMMOBILE]
-                    texRegion = anim?.getKeyFrame(masafrem)
+                    texRegion = anim?.getKeyFrame(masafrem) ?: TextureRegion()
                 }
             }
         }

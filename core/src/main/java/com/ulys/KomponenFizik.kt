@@ -4,6 +4,7 @@ import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Array
 import com.ulys.Entiti.Arah
 import com.ulys.Entiti.Gerak
 import com.ulys.KomponenFizik.BoundingBoxLocation.*
@@ -57,6 +58,19 @@ abstract class KomponenFizik : Penerima {
     fun setCalculatedPosAsCurrent(entiti: Entiti) {
         pos.set(nextPos)
         entiti.posMesej(Mesej.POS_KINI, toJson(pos))
+    }
+
+    protected fun akanBerlagaEntiti(ini: Entiti, semuaEntiti: Array<Entiti>): Boolean {
+        for (objek in semuaEntiti) {
+            // check for testing against self
+            if (objek == ini) continue
+
+            if (nextRect.overlaps(objek.rect)) {
+                ini.posMesej(Mesej.BERLAGA_ENTITI)
+                return true
+            }
+        }
+        return false
     }
 
     fun akanBerlagaDenganLayer(entiti: Entiti, rect: Rectangle, layer: MapLayer): Boolean {
