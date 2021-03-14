@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.utils.Array
+import com.badlogic.gdx.utils.JsonValue
+import java.util.*
 
 class Entiti(
     private val komponenInput: KomponenInput,
@@ -38,10 +41,6 @@ class Entiti(
 
     var konfigurasi: Konfigurasi? = null
 
-    fun muatKonfigurasiGrafik(path: String) {
-        konfigurasi = j.fromJson(Konfigurasi::class.java, Gdx.files.internal(path))
-    }
-
     fun kemaskini(delta: Float, batch: Batch, pengurusPeta: PengurusPeta) {
         komponenInput.kemaskini(delta, this)
         komponenFizik.kemaskini(delta, this, pengurusPeta)
@@ -62,6 +61,21 @@ class Entiti(
     }
 
     companion object {
+        fun muatKonfigurasi(path: String): Konfigurasi {
+            return j.fromJson(Konfigurasi::class.java, Gdx.files.internal(path))
+        }
+
+        fun muatKonfigurasiMulti(path: String): Array<Konfigurasi> {
+            val jsonValues = j.fromJson(ArrayList::class.java, Gdx.files.internal(path))
+            val configs = Array<Konfigurasi>()
+            for (jsonValue in jsonValues) {
+                val config = j.readValue(Konfigurasi::class.java, jsonValue as JsonValue?)
+                configs.add(config)
+            }
+            return configs
+        }
+
+
         const val LEBAR_FREM = 16
         const val TINGGI_FREM = 16
     }

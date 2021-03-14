@@ -6,6 +6,7 @@ import com.ulys.Entiti.AnimationType
 
 class Konfigurasi {
 
+    var entityID: String = "tiada id"
     var state: Entiti.Gerak = Entiti.Gerak.IDLE
     var direction: Entiti.Arah = Entiti.Arah.DOWN
     var animationConfig: Array<AnimationConfig> = Array()

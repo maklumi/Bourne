@@ -10,32 +10,35 @@ class PetaTown : Peta(JenisPeta.TOWN, "maps/town.tmx") {
 
     init {
         for (i in 0 until posisiMulaNPCs.size) {
-            val npc = setupEntiti(posisiMulaNPCs[i], "scripts/town_guard_walking.json")
+            val npc = setupEntiti(posisiMulaNPCs[i], Entiti.muatKonfigurasi("scripts/town_guard_walking.json"))
             semuaEntiti.add(npc)
         }
-        // Entiti spesyel
-        semuaEntiti.add(setupSpesyel("TOWN_BLACKSMITH", "scripts/town_blacksmith.json"))
-        semuaEntiti.add(setupSpesyel("TOWN_MAGE", "scripts/town_mage.json"))
-        semuaEntiti.add(setupSpesyel("TOWN_INNKEEPER", "scripts/town_innkeeper.json"))
+        // OEntiti spesyel
+        semuaEntiti.add(setupSpesyel(Entiti.muatKonfigurasi("scripts/town_blacksmith.json")))
+        semuaEntiti.add(setupSpesyel(Entiti.muatKonfigurasi("scripts/town_mage.json")))
+        semuaEntiti.add(setupSpesyel(Entiti.muatKonfigurasi("scripts/town_innkeeper.json")))
+        // Guna fail yang ada multiple konfigurasi dalam satu fail
+        val townFolkConfigs = Entiti.muatKonfigurasiMulti("scripts/town_folk.json")
+        townFolkConfigs.forEach { semuaEntiti.add(setupSpesyel(it)) }
     }
 
-    private fun setupEntiti(posisiMula: Vector2, path: String): Entiti {
+    private fun setupEntiti(posisiMula: Vector2, konf: Konfigurasi): Entiti {
         val npc = Pengeluar.NPC.get()
-        npc.muatKonfigurasiGrafik(path)
-        npc.posMesej(Penerima.Mesej.MUAT_ANIMASI, j.toJson(npc.konfigurasi))
+        npc.konfigurasi = konf
+        npc.posMesej(Penerima.Mesej.MUAT_ANIMASI, j.toJson(konf))
         npc.posMesej(Penerima.Mesej.POS_MULA, j.toJson(posisiMula))
-        npc.posMesej(Penerima.Mesej.GERAK_MULA, j.toJson(npc.konfigurasi?.state))
-        npc.posMesej(Penerima.Mesej.ARAH_MULA, j.toJson(npc.konfigurasi?.direction))
+        npc.posMesej(Penerima.Mesej.GERAK_MULA, j.toJson(konf.state))
+        npc.posMesej(Penerima.Mesej.ARAH_MULA, j.toJson(konf.direction))
         return npc
     }
 
-    private fun setupSpesyel(namaPetak: String, path: String): Entiti {
-        jadualPosEntitiSpesyel[namaPetak]?.let { pos ->
-            return setupEntiti(pos, path)
+    private fun setupSpesyel(konf: Konfigurasi): Entiti {
+        jadualPosEntitiSpesyel[konf.entityID]?.let { pos ->
+            return setupEntiti(pos, konf)
         }
-        Gdx.app.debug("PetaTown", "$namaPetak tiada lokasi spawn")
+        Gdx.app.debug("PetaTown", "${konf.entityID} tiada lokasi spawn")
         counter++
-        return setupEntiti(Vector2(counter.toFloat(), -3f), path) // letak kat luar
+        return setupEntiti(Vector2(counter.toFloat(), -3f), konf) // letak kat luar
     }
 }
 /*

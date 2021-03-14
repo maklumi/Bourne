@@ -1,6 +1,5 @@
 package com.ulys
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
@@ -49,54 +48,124 @@ abstract class KomponenGrafik : Penerima {
     }
 
     protected fun setCurrentFrame() {
-        when (gerak) {
-            Entiti.Gerak.WALKING -> {
-                texRegion = when (arah) {
-                    Entiti.Arah.LEFT -> {
+        texRegion = when (arah) {
+            Entiti.Arah.LEFT -> {
+                when (gerak) {
+                    Entiti.Gerak.IDLE -> {
+                        val anim = animations[Entiti.AnimationType.WALK_LEFT]
+                        anim?.getKeyFrame(0f)
+                    }
+                    Entiti.Gerak.WALKING -> {
                         val anim = animations[Entiti.AnimationType.WALK_LEFT]
                         anim?.getKeyFrame(masafrem)
                     }
-                    Entiti.Arah.RIGHT -> {
-                        val anim = animations[Entiti.AnimationType.WALK_RIGHT]
-                        anim?.getKeyFrame(masafrem)
-                    }
-                    Entiti.Arah.UP -> {
-                        val anim = animations[Entiti.AnimationType.WALK_UP]
-                        anim?.getKeyFrame(masafrem)
-                    }
-                    Entiti.Arah.DOWN -> {
-                        val anim = animations[Entiti.AnimationType.WALK_DOWN]
+                    Entiti.Gerak.IMMOBILE -> {
+                        val anim = animations[Entiti.AnimationType.IMMOBILE]
                         anim?.getKeyFrame(masafrem)
                     }
                 }
             }
-            Entiti.Gerak.IDLE -> {
-                texRegion = when (arah) {
-                    Entiti.Arah.LEFT -> {
-                        val anim = animations[Entiti.AnimationType.WALK_LEFT]
-                        anim?.getKeyFrame(0f)
-                    }
-                    Entiti.Arah.RIGHT -> {
+            Entiti.Arah.RIGHT -> {
+                when (gerak) {
+                    Entiti.Gerak.IDLE -> {
                         val anim = animations[Entiti.AnimationType.WALK_RIGHT]
                         anim?.getKeyFrame(0f)
                     }
-                    Entiti.Arah.UP -> {
-                        val anim = animations[Entiti.AnimationType.WALK_UP]
-                        anim?.getKeyFrame(0f)
+                    Entiti.Gerak.WALKING -> {
+                        val anim = animations[Entiti.AnimationType.WALK_RIGHT]
+                        anim?.getKeyFrame(masafrem)
                     }
-                    Entiti.Arah.DOWN -> {
-                        val anim = animations[Entiti.AnimationType.WALK_DOWN]
-                        anim?.getKeyFrame(0f)
+                    Entiti.Gerak.IMMOBILE -> {
+                        val anim = animations[Entiti.AnimationType.IMMOBILE]
+                        anim?.getKeyFrame(masafrem)
                     }
                 }
             }
-            Entiti.Gerak.IMMOBILE -> {
-                val anim = animations[Entiti.AnimationType.IMMOBILE]
-                texRegion = anim?.getKeyFrame(masafrem)
+            Entiti.Arah.UP -> {
+                when (gerak) {
+                    Entiti.Gerak.IDLE -> {
+                        val anim = animations[Entiti.AnimationType.WALK_UP]
+                        anim?.getKeyFrame(0f)
+                    }
+                    Entiti.Gerak.WALKING -> {
+                        val anim = animations[Entiti.AnimationType.WALK_UP]
+                        anim?.getKeyFrame(masafrem)
+                    }
+                    Entiti.Gerak.IMMOBILE -> {
+                        val anim = animations[Entiti.AnimationType.IMMOBILE]
+                        anim?.getKeyFrame(masafrem)
+                    }
+                }
+            }
+            Entiti.Arah.DOWN -> {
+                when (gerak) {
+                    Entiti.Gerak.IDLE -> {
+                        val anim = animations[Entiti.AnimationType.WALK_DOWN]
+                        anim?.getKeyFrame(0f)
+                    }
+                    Entiti.Gerak.WALKING -> {
+                        val anim = animations[Entiti.AnimationType.WALK_DOWN]
+                        anim?.getKeyFrame(masafrem)
+                    }
+                    Entiti.Gerak.IMMOBILE -> {
+                        val anim = animations[Entiti.AnimationType.IMMOBILE]
+                        anim?.getKeyFrame(masafrem)
+                    }
+                }
             }
         }
     }
 
+    /*
+        protected fun setCurrentFrame2() {
+            when (gerak) {
+                Entiti.Gerak.WALKING -> {
+                    texRegion = when (arah) {
+                        Entiti.Arah.LEFT -> {
+                            val anim = animations[Entiti.AnimationType.WALK_LEFT]
+                            anim?.getKeyFrame(masafrem)
+                        }
+                        Entiti.Arah.RIGHT -> {
+                            val anim = animations[Entiti.AnimationType.WALK_RIGHT]
+                            anim?.getKeyFrame(masafrem)
+                        }
+                        Entiti.Arah.UP -> {
+                            val anim = animations[Entiti.AnimationType.WALK_UP]
+                            anim?.getKeyFrame(masafrem)
+                        }
+                        Entiti.Arah.DOWN -> {
+                            val anim = animations[Entiti.AnimationType.WALK_DOWN]
+                            anim?.getKeyFrame(masafrem)
+                        }
+                    }
+                }
+                Entiti.Gerak.IDLE -> {
+                    texRegion = when (arah) {
+                        Entiti.Arah.LEFT -> {
+                            val anim = animations[Entiti.AnimationType.WALK_LEFT]
+                            anim?.getKeyFrame(0f)
+                        }
+                        Entiti.Arah.RIGHT -> {
+                            val anim = animations[Entiti.AnimationType.WALK_RIGHT]
+                            anim?.getKeyFrame(0f)
+                        }
+                        Entiti.Arah.UP -> {
+                            val anim = animations[Entiti.AnimationType.WALK_UP]
+                            anim?.getKeyFrame(0f)
+                        }
+                        Entiti.Arah.DOWN -> {
+                            val anim = animations[Entiti.AnimationType.WALK_DOWN]
+                            anim?.getKeyFrame(0f)
+                        }
+                    }
+                }
+                Entiti.Gerak.IMMOBILE -> {
+                    val anim = animations[Entiti.AnimationType.IMMOBILE]
+                    texRegion = anim?.getKeyFrame(masafrem)
+                }
+            }
+        }
+    */
     private fun buatAnimasi(config: AnimationConfig): Animation<TextureRegion> {
         val path = config.texturePaths[0]
         val points = config.gridPoints
