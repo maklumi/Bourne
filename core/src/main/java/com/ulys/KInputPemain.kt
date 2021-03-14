@@ -40,7 +40,7 @@ class KInputPemain : KomponenInput() {
 
         // input dari mouse
         if (tetikus[Tikus.PILIH] == true) {
-            Gdx.app.debug("KInputPemain", "Koord skrin (${koordinatTikus.x},${koordinatTikus.y})")
+//            Gdx.app.debug("KInputPemain", "Koord skrin (${koordinatTikus.x},${koordinatTikus.y})")
             entiti.posMesej(Penerima.Mesej.PEMILIHAN_MULA, j.toJson(koordinatTikus))
             tetikus[Tikus.PILIH] = false
         }

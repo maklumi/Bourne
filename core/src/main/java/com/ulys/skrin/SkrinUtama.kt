@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.ulys.*
+import com.ulys.ui.HUD
 
 class SkrinUtama : Screen {
 
@@ -18,6 +19,8 @@ class SkrinUtama : Screen {
     private var lebarViewcam = 40f
     private var tinggiViewcam = 30f
     private var peta: TiledMap? = null
+    private lateinit var hud: HUD
+    private lateinit var hudKamera: OrthographicCamera
     private lateinit var kamera: OrthographicCamera
     private lateinit var renderer: OrthogonalTiledMapRenderer
 
@@ -27,6 +30,10 @@ class SkrinUtama : Screen {
     private lateinit var shapeRenderer: ShapeRenderer
 
     override fun show() {
+        hudKamera = OrthographicCamera()
+        hudKamera.setToOrtho(false,lebarWindow,tinggiWindow)
+        hud = HUD(hudKamera)
+
         setupViewport()
 
         kamera = OrthographicCamera(lebarWindow, tinggiWindow)
@@ -60,11 +67,13 @@ class SkrinUtama : Screen {
         renderer.setView(pengurusPeta.kamera)
         renderer.render(intArrayOf(1))
 
-        pengurusPeta.updateMapEntities(delta, renderer.batch, pengurusPeta)
+//        pengurusPeta.updateMapEntities(delta, renderer.batch, pengurusPeta)
 
         player.kemaskini(delta, renderer.batch, pengurusPeta)
 
         lukisDebug()
+
+        hud.render(delta)
     }
 
     override fun resize(width: Int, height: Int) {}
