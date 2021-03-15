@@ -6,16 +6,24 @@ import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 
 class HUD(camera: Camera) : Screen {
 
-    private val textureAtlas = TextureAtlas("skins/statusui.atlas")
-    private val skin = Skin(Gdx.files.internal("skins/statusui.json"), textureAtlas)
+    companion object {
+        val statusuiTexAtlas = TextureAtlas("skins/statusui.atlas")
+        val statusuiSkin = Skin(Gdx.files.internal("skins/statusui.json"), statusuiTexAtlas)
+        val itemsTexAtlas = TextureAtlas("skins/items.atlas")
+    }
+
+    private val statusUI = StatusUI(statusuiSkin, statusuiTexAtlas)
+    private val inventoryUI = InventoriUI(statusuiSkin, statusuiTexAtlas)
     private val viewport = ScreenViewport(camera)
-    private val statusUI = StatusUI(skin, textureAtlas)
     val stage = Stage(viewport).also {
         it.addActor(statusUI)
+        inventoryUI.setPosition(statusUI.width, 0f, Align.bottomLeft)
+        it.addActor(inventoryUI)
     }
 
     override fun render(delta: Float) {
@@ -27,6 +35,7 @@ class HUD(camera: Camera) : Screen {
 
     override fun resize(width: Int, height: Int) {
         stage.viewport.update(width, height, true)
+        inventoryUI.setPosition(statusUI.width, 0f, Align.bottomLeft)
     }
 
     override fun pause() {}
