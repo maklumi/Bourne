@@ -8,6 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.Window
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
 import com.badlogic.gdx.utils.Scaling
+import com.ulys.ui.Barang.Companion.CONSUMABLE
+import com.ulys.ui.Barang.Companion.STACKABLE
+import com.ulys.ui.Barang.Companion.WEARABLE
 
 class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
     Window("Inventori", skin, "solidbackground") {
@@ -29,7 +32,19 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
             drag.addTarget(SlotTarget(slot))
 
             if (i == 5 || i == 10 || i == 15 || i == 20) {
-                val image = Image(HUD.itemsTexAtlas.findRegion("armor01"))
+                val image = Barang(
+                    HUD.itemsTexAtlas.findRegion("armor01"),
+                    WEARABLE, "armor01"
+                )
+                image.setScaling(Scaling.none)
+                slot.add(image)
+
+                drag.addSource(SlotSumber(slot, drag))
+            } else if (i == 1 || i == 13 || i == 25 || i == 30) {
+                val image = Barang(
+                    HUD.itemsTexAtlas.findRegion("potions02"),
+                    CONSUMABLE or STACKABLE, "potions02"
+                )
                 image.setScaling(Scaling.none)
                 slot.add(image)
 

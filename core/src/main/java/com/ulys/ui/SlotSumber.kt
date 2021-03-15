@@ -1,13 +1,12 @@
 package com.ulys.ui
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.*
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target
 
 class SlotSumber(
-    private var sumber: Slot,
+    var sumber: Slot,
     private var dragAndDrop: DragAndDrop
 ) :
     Source(sumber.getTopItem()) {
@@ -16,10 +15,10 @@ class SlotSumber(
         val payload = Payload()
 
         sumber = actor.parent as Slot
-        sumber.tolakKiraan()
+        sumber.paparKiraan()
 
-        payload.dragActor = actor
-        dragAndDrop.setDragActorPosition(-(event.stageX - actor.width), -event.stageY)
+        payload.dragActor = actor // actor is top item or null
+        dragAndDrop.setDragActorPosition(-event.stageX + actor.width, -event.stageY)
 
         return payload
     }
@@ -29,5 +28,6 @@ class SlotSumber(
         if (target == null && payload != null) {
             sumber.add(payload.dragActor)
         }
+        sumber.paparKiraan()
     }
 }
