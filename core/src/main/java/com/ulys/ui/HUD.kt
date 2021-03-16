@@ -22,8 +22,8 @@ class HUD(camera: Camera) : Screen {
     private val viewport = ScreenViewport(camera)
     val stage = Stage(viewport).also {
         it.addActor(statusUI)
-        inventoryUI.setPosition(statusUI.width, 0f, Align.bottomLeft)
         it.addActor(inventoryUI)
+        inventoryUI.isMovable = true
     }
 
     override fun render(delta: Float) {
@@ -34,8 +34,8 @@ class HUD(camera: Camera) : Screen {
     override fun show() {}
 
     override fun resize(width: Int, height: Int) {
-        stage.viewport.update(width, height, true)
-        inventoryUI.setPosition(statusUI.width, 0f, Align.bottomLeft)
+//        stage.viewport.update(width, height, true)
+        inventoryUI.setPosition((width - inventoryUI.width) / 2, (height - inventoryUI.height) / 2)
     }
 
     override fun pause() {}
