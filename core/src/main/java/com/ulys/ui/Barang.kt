@@ -5,11 +5,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.ulys.ui.Barang.Sifat.STACKABLE
 
 class Barang(
-    region: TextureRegion,
-    val itemAttributes: Int,    // sifat
-    val itemType: Int,          // fungsi
-    val itemID: String
+    region: TextureRegion? = null,
+    var itemAttributes: Int = 0,    // sifat
+    var itemUseType: Int = 0,          // fungsi
+    var itemTypeID: ItemTypeID? = null
 ) : Image(region) {
+
+    enum class ItemTypeID {
+        ARMOR01, ARMOR02, ARMOR03, ARMOR04, ARMOR05,
+        BOOTS01, BOOTS02, BOOTS03, BOOTS04, BOOTS05,
+        HELMET01, HELMET02, HELMET03, HELMET04, HELMET05,
+        SHIELD01, SHIELD02, SHIELD03, SHIELD04, SHIELD05,
+        WANDS01, WANDS02, WANDS03, WANDS04, WANDS05,
+        WEAPON01, WEAPON02, WEAPON03, WEAPON04, WEAPON05,
+        POTIONS01, POTIONS02, POTIONS03,
+        SCROLL01, SCROLL02, SCROLL03
+    }
 
     enum class Sifat(val bit: Int) {
         CONSUMABLE(1),
@@ -36,6 +47,6 @@ class Barang(
     }
 
     fun isSameItemType(calon: Barang): Boolean {
-        return itemID == calon.itemID
+        return itemTypeID == calon.itemTypeID
     }
 }

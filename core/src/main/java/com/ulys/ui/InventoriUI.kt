@@ -7,9 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.Window
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
-import com.badlogic.gdx.utils.Scaling
+import com.badlogic.gdx.utils.Array
 import com.ulys.ui.Barang.Fungsi.*
-import com.ulys.ui.Barang.Sifat.*
 
 
 class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
@@ -19,16 +18,17 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
     private val sebaris = 10
     private val drag = DragAndDrop()
     private val wh = 52f // slot width and height
+    private val playerTable = Table()
+    private val inventoryTable = Table()
 
     init {
         drag.setKeepWithinStage(false) // penting
         setFillParent(false)
 
-        val playerTable = Table()
         val equipSlots = Table()
         equipSlots.defaults().space(10f)
 
-        val headSlot = Slot(ARMOR_HELMET.bit or ARMOR_CHEST.bit, "inv_helmet")
+        val headSlot = Slot(ARMOR_HELMET.bit, "inv_helmet")
         val leftArmSlot = Slot(
             WEAPON_ONEHAND.bit or WEAPON_TWOHAND.bit or ARMOR_SHIELD.bit or WAND_ONEHAND.bit or WAND_TWOHAND.bit,
             "inv_weapon"
@@ -46,34 +46,10 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
         drag.addTarget(SlotTarget(chestSlot))
         drag.addTarget(SlotTarget(legsSlot))
 
-        val inventoryTable = Table()
         for (i in 1..jumlahSlot) {
             val slot = Slot()
             drag.addTarget(SlotTarget(slot))
-
-            if (i == 5 || i == 10 || i == 15 || i == 20) {
-                val image = Barang(
-                    HUD.itemsTexAtlas.findRegion("armor01"),
-                    WEARABLE.bit, ARMOR_CHEST.bit, "armor01"
-                )
-                image.setScaling(Scaling.none)
-                slot.add(image)
-
-                drag.addSource(SlotSumber(slot, drag))
-            } else if (i == 1 || i == 13 || i == 25 || i == 30) {
-                val image = Barang(
-                    HUD.itemsTexAtlas.findRegion("potions02"),
-                    CONSUMABLE.bit or STACKABLE.bit,
-                    RESTORE_MP.bit, "potions02"
-                )
-                image.setScaling(Scaling.none)
-                slot.add(image)
-
-                drag.addSource(SlotSumber(slot, drag))
-            }
-
             inventoryTable.add(slot).size(wh, wh)
-
             if (i % sebaris == 0) inventoryTable.row()
         }
 
@@ -93,5 +69,15 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
         add(playerTable).padBottom(20f).row()
         add(inventoryTable).row()
         pack()
+    }
+
+    fun isiInventori(itemIDs: Array<Barang.ItemTypeID>) {
+        val cells = inventoryTable.cells
+        for (i in 0 until itemIDs.size) {
+            val slot = cells[i].actor as Slot
+            val brg = FaktoriBarang.buatBarang(itemIDs[i])
+            slot.add(brg)
+            drag.addSource(SlotSumber(slot, drag))
+        }
     }
 }

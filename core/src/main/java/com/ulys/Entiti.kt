@@ -39,7 +39,7 @@ class Entiti(
     val rect: Rectangle
         get() = komponenFizik.nextRect
 
-    var konfigurasi: Konfigurasi? = null
+    var konfigurasi: Konfigurasi = Konfigurasi()
 
     fun kemaskini(delta: Float, batch: Batch, pengurusPeta: PengurusPeta) {
         komponenInput.kemaskini(delta, this)

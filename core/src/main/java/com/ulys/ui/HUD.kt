@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
-import com.badlogic.gdx.utils.Align
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 
 class HUD(camera: Camera) : Screen {
@@ -24,6 +24,10 @@ class HUD(camera: Camera) : Screen {
         it.addActor(statusUI)
         it.addActor(inventoryUI)
         inventoryUI.isMovable = true
+    }
+
+    fun isiInventori(itemIDs: Array<Barang.ItemTypeID>) {
+        inventoryUI.isiInventori(itemIDs)
     }
 
     override fun render(delta: Float) {

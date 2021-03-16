@@ -3,6 +3,7 @@ package com.ulys
 import com.badlogic.gdx.math.GridPoint2
 import com.badlogic.gdx.utils.Array
 import com.ulys.Entiti.AnimationType
+import com.ulys.ui.Barang
 
 class Konfigurasi {
 
@@ -10,6 +11,7 @@ class Konfigurasi {
     var state: Entiti.Gerak = Entiti.Gerak.IDLE
     var direction: Entiti.Arah = Entiti.Arah.DOWN
     var animationConfig: Array<AnimationConfig> = Array()
+    var inventory: Array<Barang.ItemTypeID> = Array()
 
     class AnimationConfig {
         var frameDuration: Float = 1f

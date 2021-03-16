@@ -54,6 +54,7 @@ class SkrinUtama : Screen {
         hudKamera = OrthographicCamera()
         hudKamera.setToOrtho(false, lebarWindow, tinggiWindow)
         hud = HUD(hudKamera)
+        hud.isiInventori(player.konfigurasi.inventory)
 
         val multiplexer = InputMultiplexer()
         multiplexer.addProcessor(hud.stage)

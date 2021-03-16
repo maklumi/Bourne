@@ -21,7 +21,7 @@ class SlotTarget(private val slotTarget: Slot) : DragAndDrop.Target(slotTarget) 
         val sumber = (source as SlotSumber).sumber
 
         //First, does the slot accept the source item type?
-        if (!slotTarget.bolehTerimaFungsi(actor.itemType)) {
+        if (!slotTarget.bolehTerimaFungsi(actor.itemUseType)) {
             //Put item back where it came from, slot doesn't accept item
             sumber.add(actor)
             return
