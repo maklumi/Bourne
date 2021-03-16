@@ -24,6 +24,7 @@ class HUD(camera: Camera) : Screen {
         it.addActor(statusUI)
         it.addActor(inventoryUI)
         inventoryUI.isMovable = true
+        it.addActor(inventoryUI.tooltip)
     }
 
     fun isiInventori(itemIDs: Array<Barang.ItemTypeID>) {

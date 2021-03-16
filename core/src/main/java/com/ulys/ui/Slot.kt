@@ -78,7 +78,15 @@ class Slot() : Stack() {
     }
 
     companion object {
-        fun tukarTempat(sumber: Slot, target: Slot, dragActor: Actor) {
+        fun tukarTempat(sumber: Slot, target: Slot, dragActor: Barang) {
+            //check if items can accept each other, otherwise, no swap
+            if (!target.bolehTerimaFungsi(dragActor.itemUseType) ||
+                !sumber.bolehTerimaFungsi(target.getTopItem()!!.itemUseType)
+            ) {
+                sumber.add(dragActor)
+                return
+            }
+            //swap
             val senaraiSumber = sumber.popBarangan()
             senaraiSumber.add(dragActor)
             val senaraiTarget = target.popBarangan()

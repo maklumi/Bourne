@@ -11,6 +11,8 @@ class Barang(
     var itemTypeID: ItemTypeID? = null
 ) : Image(region) {
 
+    var itemShortDescription: String? = null
+
     enum class ItemTypeID {
         ARMOR01, ARMOR02, ARMOR03, ARMOR04, ARMOR05,
         BOOTS01, BOOTS02, BOOTS03, BOOTS04, BOOTS05,

@@ -20,6 +20,8 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
     private val wh = 52f // slot width and height
     private val playerTable = Table()
     private val inventoryTable = Table()
+    val tooltip = Tooltip(skin)
+    private val tooltipListener = TooltipListener(tooltip)
 
     init {
         drag.setKeepWithinStage(false) // penting
@@ -40,6 +42,12 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
         val chestSlot = Slot(ARMOR_CHEST.bit, "inv_chest")
         val legsSlot = Slot(ARMOR_FEET.bit, "inv_boot")
 
+        headSlot.addListener(tooltipListener)
+        leftArmSlot.addListener(tooltipListener)
+        rightArmSlot.addListener(tooltipListener)
+        chestSlot.addListener(tooltipListener)
+        legsSlot.addListener(tooltipListener)
+
         drag.addTarget(SlotTarget(headSlot))
         drag.addTarget(SlotTarget(leftArmSlot))
         drag.addTarget(SlotTarget(rightArmSlot))
@@ -48,6 +56,7 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
 
         for (i in 1..jumlahSlot) {
             val slot = Slot()
+            slot.addListener(tooltipListener)
             drag.addTarget(SlotTarget(slot))
             inventoryTable.add(slot).size(wh, wh)
             if (i % sebaris == 0) inventoryTable.row()
