@@ -11,6 +11,8 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.ulys.*
+import com.ulys.sejarah.Profil
+import com.ulys.sejarah.Penyelia
 import com.ulys.ui.HUD
 
 class SkrinUtama : Screen {
@@ -41,6 +43,8 @@ class SkrinUtama : Screen {
 
         pengurusPeta = PengurusPeta()
         pengurusPeta.setupPeta(PengeluarPeta.JenisPeta.TOWN)
+        Penyelia.addMurid(pengurusPeta)
+        Penyelia.loadProfile()
         pengurusPeta.kamera = this.kamera
         peta = pengurusPeta.tiledMap
 
@@ -95,6 +99,8 @@ class SkrinUtama : Screen {
 
     override fun pause() {
         gameState = GameState.PAUSED
+        Penyelia.ajar(Profil.ProfileEvent.SAVING_PROFILE)
+        Penyelia.saveProfile()
     }
 
     override fun resume() {

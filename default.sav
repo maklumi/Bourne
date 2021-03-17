@@ -1,0 +1,21 @@
+{
+currentMapType: {
+	class: java.lang.String
+	value: TOWN
+}
+castleOfDoomMapStartPosition: {
+	class: com.badlogic.gdx.math.Vector2
+	x: 15.5
+	y: 1.5
+}
+townMapStartPosition: {
+	class: com.badlogic.gdx.math.Vector2
+	x: 13
+	y: 1
+}
+topWorldMapStartPosition: {
+	class: com.badlogic.gdx.math.Vector2
+	x: 16
+	y: 21
+}
+}
