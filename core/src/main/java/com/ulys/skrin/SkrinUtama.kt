@@ -30,6 +30,8 @@ class SkrinUtama : Screen {
     private val kpp = Peta.kpp
     private lateinit var shapeRenderer: ShapeRenderer
 
+    enum class GameState { RUNNING, PAUSED, }
+
     override fun show() {
         setupViewport()
 
@@ -63,6 +65,10 @@ class SkrinUtama : Screen {
     }
 
     override fun render(delta: Float) {
+        if (gameState == GameState.PAUSED) {
+            player.komponenInput.kemaskini(delta, player)
+            return
+        }
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
@@ -87,9 +93,13 @@ class SkrinUtama : Screen {
         hud.resize(width, height)
     }
 
-    override fun pause() {}
+    override fun pause() {
+        gameState = GameState.PAUSED
+    }
 
-    override fun resume() {}
+    override fun resume() {
+        gameState = GameState.RUNNING
+    }
 
     override fun hide() {}
 
@@ -143,6 +153,21 @@ class SkrinUtama : Screen {
             }
             end()
         }
+    }
+
+    companion object {
+        var gameState: GameState = GameState.RUNNING
+            set(gameState) {
+                field = when (gameState) {
+                    GameState.RUNNING -> gameState
+                    GameState.PAUSED -> {
+                        if (field == GameState.PAUSED)
+                            GameState.RUNNING
+                        else
+                            GameState.PAUSED
+                    }
+                }
+            }
     }
 
 }

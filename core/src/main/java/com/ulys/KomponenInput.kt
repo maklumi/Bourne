@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3
 
 abstract class KomponenInput : InputProcessor, Penerima {
 
-    protected enum class Kekunci { KIRI, KANAN, ATAS, BAWAH, QUIT }
+    protected enum class Kekunci { KIRI, KANAN, ATAS, BAWAH, QUIT, PAUSE }
 
     protected val kekunci = HashMap<Kekunci, Boolean>().also {
         it[Kekunci.KIRI] = false
@@ -14,6 +14,7 @@ abstract class KomponenInput : InputProcessor, Penerima {
         it[Kekunci.ATAS] = false
         it[Kekunci.BAWAH] = false
         it[Kekunci.QUIT] = false
+        it[Kekunci.PAUSE] = false
     }
 
     enum class Tikus { PILIH, LAKSANA }
@@ -32,6 +33,7 @@ abstract class KomponenInput : InputProcessor, Penerima {
             Input.Keys.UP, Input.Keys.W -> kekunci[Kekunci.ATAS] = true
             Input.Keys.DOWN, Input.Keys.S -> kekunci[Kekunci.BAWAH] = true
             Input.Keys.Q -> kekunci[Kekunci.QUIT] = true
+            Input.Keys.P -> kekunci[Kekunci.PAUSE] = true
         }
         return true
     }
@@ -43,6 +45,7 @@ abstract class KomponenInput : InputProcessor, Penerima {
             Input.Keys.UP, Input.Keys.W -> kekunci[Kekunci.ATAS] = false
             Input.Keys.DOWN, Input.Keys.S -> kekunci[Kekunci.BAWAH] = false
             Input.Keys.Q -> kekunci[Kekunci.QUIT] = false
+            Input.Keys.P -> kekunci[Kekunci.PAUSE] = false
         }
         return true
     }

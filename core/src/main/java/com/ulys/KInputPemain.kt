@@ -1,6 +1,7 @@
 package com.ulys
 
 import com.badlogic.gdx.Gdx
+import com.ulys.skrin.SkrinUtama
 
 class KInputPemain : KomponenInput() {
 
@@ -11,6 +12,11 @@ class KInputPemain : KomponenInput() {
     private fun prosesInput(delta: Float, entiti: Entiti) {
         if (delta < 0.008f) return
         when {
+            kekunci[Kekunci.PAUSE] == true -> {
+                Gdx.app.debug("KInputPemain", "Paused")
+                kekunci[Kekunci.PAUSE] = false
+                SkrinUtama.gameState = SkrinUtama.GameState.PAUSED
+            }
             kekunci[Kekunci.KIRI] == true -> {
                 entiti.posMesej(Penerima.Mesej.ARAH_KINI, toJson(Entiti.Arah.LEFT))
                 entiti.posMesej(Penerima.Mesej.GERAK_KINI, toJson(Entiti.Gerak.WALKING))
