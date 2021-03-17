@@ -11,8 +11,8 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.ulys.*
-import com.ulys.sejarah.Profil
 import com.ulys.sejarah.Penyelia
+import com.ulys.sejarah.Profil
 import com.ulys.ui.HUD
 
 class SkrinUtama : Screen {

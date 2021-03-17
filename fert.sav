@@ -18,13 +18,15 @@ topWorldMapStartPosition: {
 	x: 16
 	y: 21
 }
-playerEquipInventory: []
-playerInventory: [
+playerEquipInventory: [
 	{
 		class: com.ulys.ui.LokasiBarang
+		locationIndex: 3
 		itemTypeAtLocation: ARMOR04
 		numberItemsAtLocation: 1
 	}
+]
+playerInventory: [
 	{
 		class: com.ulys.ui.LokasiBarang
 		locationIndex: 1
@@ -39,15 +41,9 @@ playerInventory: [
 	}
 	{
 		class: com.ulys.ui.LokasiBarang
-		locationIndex: 3
-		itemTypeAtLocation: POTIONS01
-		numberItemsAtLocation: 1
-	}
-	{
-		class: com.ulys.ui.LokasiBarang
 		locationIndex: 4
 		itemTypeAtLocation: POTIONS01
-		numberItemsAtLocation: 1
+		numberItemsAtLocation: 2
 	}
 	{
 		class: com.ulys.ui.LokasiBarang

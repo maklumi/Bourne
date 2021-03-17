@@ -2,6 +2,7 @@ package com.ulys.sejarah
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
+import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ObjectMap
 import com.ulys.j
 import java.util.*
@@ -18,6 +19,28 @@ object Penyelia : Sejarah() {
     }
     private var profileName: String = "default"
     private var profileProperties = ObjectMap<String, Any>()
+
+    fun getSenaraiNamafail(): Array<String> {
+        val senaraiNamafail = Array<String>()
+        val iter = this.profiles.keys.iterator()
+        while (iter.hasNext()) {
+            senaraiNamafail.add(iter.next())
+        }
+        return senaraiNamafail
+    }
+
+    fun getFileHandleUntuk(profileName: String): FileHandle? {
+        return profiles[profileName]
+    }
+
+    fun setNamaProfail(nama: String) {
+        val baru = !adaNamafail(nama)
+        profileName = if (baru) "default" else nama
+    }
+
+    fun adaNamafail(nama: String): Boolean {
+        return profiles.containsKey(nama)
+    }
 
     fun setProp(key: String, objek: Any) {
         profileProperties.put(key, objek)
@@ -48,10 +71,10 @@ object Penyelia : Sejarah() {
         val text = j.prettyPrint(j.toJson(profileProperties))
         writeProfileToStorage(profileName, text, true)
 //        ajar(Murid.ProfileEvent.SAVING_PROFILE)
-        Gdx.app.debug("PenyeliaSejarah", text)
+//        Gdx.app.debug("PenyeliaSejarah", text)
     }
 
-    private fun writeProfileToStorage(profileName: String, fileData: String, overwrite: Boolean) {
+    fun writeProfileToStorage(profileName: String, fileData: String, overwrite: Boolean) {
         val localFileExists = Gdx.files.internal("$profileName.sav").exists()
 
         //If we cannot overwrite and the file exists, exit
