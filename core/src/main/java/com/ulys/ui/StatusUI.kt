@@ -7,6 +7,9 @@ import com.badlogic.gdx.utils.Align
 
 class StatusUI(skin: Skin, textureAtlas: TextureAtlas) : Window("statistik", skin) {
 
+    val suisInventori = ImageButton(skin, "inventory-button").also {
+        it.imageCell.size(32f, 32f)
+    }
     private val hpBar = Image(textureAtlas.findRegion("HP_Bar"))
     private val mpBar = Image(textureAtlas.findRegion("MP_Bar"))
     private val xpBar = Image(textureAtlas.findRegion("XP_Bar"))
@@ -48,6 +51,17 @@ class StatusUI(skin: Skin, textureAtlas: TextureAtlas) : Window("statistik", ski
         val goldLabel = Label("gp: ", skin)
         val goldVal = Label(gold.toString(), skin)
 
+        //Add to layout
+        defaults().expand().fill()
+
+        //account for the title padding
+        pad(padTop + 10, 10f, 10f, 10f)
+
+        add()
+        add()
+        add(suisInventori).align(Align.right)
+        row()
+
         add(groupHealth).size(bar.width, bar.height)
         add(Label(" hp:", skin))
         add(Label(hp.toString(), skin)).align(Align.left)
@@ -65,6 +79,7 @@ class StatusUI(skin: Skin, textureAtlas: TextureAtlas) : Window("statistik", ski
 
         add(levelLabel)
         add(levelVal).align(Align.left)
+        row()
         add(goldLabel)
         add(goldVal).align(Align.left)
         pad(40f)

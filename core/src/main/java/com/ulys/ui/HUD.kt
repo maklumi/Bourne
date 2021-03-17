@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 
@@ -23,8 +25,17 @@ class HUD(camera: Camera) : Screen {
     val stage = Stage(viewport).also {
         it.addActor(statusUI)
         it.addActor(inventoryUI)
-        inventoryUI.isMovable = true
         it.addActor(inventoryUI.tooltip)
+    }
+
+    init {
+        inventoryUI.isMovable = true
+        inventoryUI.isVisible = false
+        statusUI.suisInventori.addListener(object : ClickListener() {
+            override fun clicked(event: InputEvent, x: Float, y: Float) {
+                inventoryUI.isVisible = !inventoryUI.isVisible
+            }
+        })
     }
 
     fun isiInventori(itemIDs: Array<Barang.ItemTypeID>) {
@@ -39,8 +50,8 @@ class HUD(camera: Camera) : Screen {
     override fun show() {}
 
     override fun resize(width: Int, height: Int) {
-//        stage.viewport.update(width, height, true)
-        inventoryUI.setPosition((width - inventoryUI.width) / 2, (height - inventoryUI.height) / 2)
+        stage.viewport.update(width, height, true)
+        inventoryUI.setPosition(statusUI.width, (height - inventoryUI.height) / 2)
     }
 
     override fun pause() {}

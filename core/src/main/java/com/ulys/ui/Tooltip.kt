@@ -10,6 +10,7 @@ class Tooltip(skin: Skin) : Window("", skin) {
 
     init {
         add(keterangan)
+        isVisible = false
     }
 
     fun bolehTunjuk(slot: Slot, visible: Boolean) {
