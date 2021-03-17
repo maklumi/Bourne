@@ -8,16 +8,16 @@ class Graf(
 ) {
 
     private var numChoices = 0
-    private val associatedChoices = Hashtable<Int, ArrayList<Int>>(conversations.size).also {
+    private val associatedChoices = Hashtable<Int, ArrayList<Pilihan>>(conversations.size).also {
         for (bual in conversations.values) {
             it[bual.id] = ArrayList()
         }
     }
     private var currentConversation = getConversationByID(root)
 
-    fun addChoice(sourceID: Int, targetID: Int) {
-        val arr = associatedChoices[sourceID] ?: return
-        arr.add(targetID)
+    fun addChoice(pilihan: Pilihan) {
+        val arr = associatedChoices[pilihan.sourceId] ?: return
+        arr.add(pilihan)
         numChoices++
     }
 
@@ -25,12 +25,23 @@ class Graf(
         return currentConversation?.dialog ?: ":)"
     }
 
-    fun getCurrentChoices(): ArrayList<Int> {
+    fun getCurrentChoices(): ArrayList<Pilihan> {
         return associatedChoices[currentConversation?.id] ?: ArrayList()
     }
 
     fun getConversationByID(id: Int): Perbualan? {
         return conversations[id]
+    }
+
+    fun getDestinationChoicePhraseById(id: Int): String {
+        if (currentConversation == null) return "current conversation is null"
+        if (isReachable(currentConversation!!.id, id)) {
+            val list = associatedChoices[currentConversation!!.id] ?: ArrayList()
+            for (choice in list) {
+                if (choice.destinationId == id) return choice.choicePhrase
+            }
+        }
+        return "not found"
     }
 
     fun setCurrentConversation(id: Int) {
@@ -47,8 +58,14 @@ class Graf(
         if (!isValid(sourceID) || !isValid(sinkID)) return false
 
         //First get edges/choices from the source
-        val list = associatedChoices[sourceID] as ArrayList
-        return list.contains(sinkID)
+        for (conversation in associatedChoices[sourceID] as ArrayList) {
+            if (conversation.sourceId == sourceID
+                && conversation.destinationId == sinkID
+            ) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun isValid(conversationID: Int): Boolean {
@@ -66,8 +83,8 @@ class Graf(
         for (conversationID in keys) {
             string.append(String.format("[%d]: ", conversationID))
 
-            for (choiceID in associatedChoices[conversationID]!!) {
-                string.append(String.format("%d ", choiceID))
+            for (choice in associatedChoices[conversationID]!!) {
+                string.append(String.format("%d ", choice.destinationId))
             }
 
             string.append(System.getProperty("line.separator"))
