@@ -13,7 +13,7 @@ class Slot() : Stack() {
 
     //All slots have this default image
     private val image = Image(NinePatch(HUD.statusuiTexAtlas.createPatch("dialog")))
-    private val kiraan: Int get() = children.size - 2
+    val kiraan: Int get() = children.size - 2
     private val label = Label("0", HUD.statusuiSkin, "inventory-item-count")
     private var stiker: Image? = null
     private val rakLatar = Stack()

@@ -19,7 +19,8 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
     private val drag = DragAndDrop()
     private val wh = 52f // slot width and height
     private val playerTable = Table()
-    private val inventoryTable = Table()
+    val equipSlots = Table()
+    val inventoryTable = Table()
     val tooltip = Tooltip(skin)
     private val tooltipListener = TooltipListener(tooltip)
 
@@ -27,7 +28,6 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
         drag.setKeepWithinStage(false) // penting
         setFillParent(false)
 
-        val equipSlots = Table()
         equipSlots.defaults().space(10f)
 
         val headSlot = Slot(ARMOR_HELMET.bit, "inv_helmet")
@@ -80,13 +80,32 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
         pack()
     }
 
-    fun isiInventori(itemIDs: Array<Barang.ItemTypeID>) {
-        val cells = inventoryTable.cells
-        for (i in 0 until itemIDs.size) {
-            val slot = cells[i].actor as Slot
-            val brg = FaktoriBarang.buatBarang(itemIDs[i])
-            slot.add(brg)
-            drag.addSource(SlotSumber(slot, drag))
+    fun isiInventori(table: Table, lislokasi: Array<LokasiBarang>) {
+        val cells = table.cells
+        for (i in 0 until lislokasi.size) {
+            val loc = lislokasi[i]
+            val itemTypeId = Barang.ItemTypeID.valueOf(loc.itemTypeAtLocation)
+
+            val slot = cells[loc.locationIndex].actor as Slot
+            slot.popBarangan()
+
+            for (kiraan in 0 until loc.numberItemsAtLocation) {
+                val brg = FaktoriBarang.buatBarang(itemTypeId)
+                slot.add(brg)
+                drag.addSource(SlotSumber(slot, drag))
+            }
         }
+    }
+
+    fun getInventory(fromTable: Table): Array<LokasiBarang> {
+        val cells = fromTable.cells
+        val items = Array<LokasiBarang>()
+        for (i in 0 until cells.size) {
+            val slot = cells[i].actor as Slot? ?: continue
+            if (slot.adaBarang()) {
+                items.add(LokasiBarang(i, slot.getTopItem()?.itemTypeID.toString(), slot.kiraan))
+            }
+        }
+        return items
     }
 }

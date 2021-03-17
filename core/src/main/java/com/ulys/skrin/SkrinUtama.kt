@@ -44,7 +44,7 @@ class SkrinUtama : Screen {
         pengurusPeta = PengurusPeta()
         pengurusPeta.setupPeta(PengeluarPeta.JenisPeta.TOWN)
         Penyelia.addMurid(pengurusPeta)
-        Penyelia.loadProfile()
+//        Penyelia.loadProfile()
         pengurusPeta.kamera = this.kamera
         peta = pengurusPeta.tiledMap
 
@@ -59,8 +59,10 @@ class SkrinUtama : Screen {
 
         hudKamera = OrthographicCamera()
         hudKamera.setToOrtho(false, lebarWindow, tinggiWindow)
-        hud = HUD(hudKamera)
-        hud.isiInventori(player.konfigurasi.inventory)
+        hud = HUD(hudKamera, player)
+        Penyelia.addMurid(hud)
+        Penyelia.loadProfile()
+//        hud.isiInventori(player.konfigurasi.inventory)
 
         val multiplexer = InputMultiplexer()
         multiplexer.addProcessor(hud.stage)
