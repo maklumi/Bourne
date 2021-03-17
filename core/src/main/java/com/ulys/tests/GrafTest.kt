@@ -38,12 +38,12 @@ object GrafTest {
         conversations[jawabTak.id] = jawabTak
         conversations[takBerkait.id] = takBerkait
 
-        val graph = Graf(conversations, mula)
+        val graph = Graf(conversations, mula.id)
 
-        graph.addChoice(mula, jawabYa)
-        graph.addChoice(mula, jawabTak)
-        graph.addChoice(jawabYa, mula)
-        graph.addChoice(jawabTak, mula)
+        graph.addChoice(mula.id, jawabYa.id)
+        graph.addChoice(mula.id, jawabTak.id)
+        graph.addChoice(jawabYa.id, mula.id)
+        graph.addChoice(jawabTak.id, mula.id)
 
         println(graph)
         println(graph.displayCurrentConversation())
@@ -55,15 +55,16 @@ object GrafTest {
                 println(graph.displayCurrentConversation())
                 continue
             }
-            graph.setCurrentConversation(conversation)
+            graph.setCurrentConversation(conversation.id)
             println(graph.displayCurrentConversation())
         }
     }
 
     private fun showNextChoices(graf: Graf): Perbualan {
         val choices = graf.getCurrentChoices()
-        for (conversation in choices) {
-            println("${conversation.id}  ${conversation.choicePhrase}")
+        for (conversationID in choices) {
+            val conversation = graf.getConversationByID(conversationID)
+            println("$conversationID  ${conversation?.choicePhrase}")
         }
 
         val br = BufferedReader(InputStreamReader(System.`in`))

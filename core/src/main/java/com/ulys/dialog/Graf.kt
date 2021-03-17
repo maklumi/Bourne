@@ -1,62 +1,58 @@
 package com.ulys.dialog
 
 import java.util.*
-import kotlin.collections.ArrayList
 
 class Graf(
     private val conversations: Hashtable<Int, Perbualan>,
-    private var currentConversation: Perbualan
+    root: Int
 ) {
 
     private var numChoices = 0
-    private val associatedChoices = Hashtable<Perbualan, ArrayList<Perbualan>>(conversations.size).also {
+    private val associatedChoices = Hashtable<Int, ArrayList<Int>>(conversations.size).also {
         for (bual in conversations.values) {
-            it[bual] = ArrayList()
+            it[bual.id] = ArrayList()
         }
     }
+    private var currentConversation = getConversationByID(root)
 
-    fun addChoice(source: Perbualan, target: Perbualan) {
-        val arr = associatedChoices[source] ?: return
-        arr.add(target)
+    fun addChoice(sourceID: Int, targetID: Int) {
+        val arr = associatedChoices[sourceID] ?: return
+        arr.add(targetID)
         numChoices++
     }
 
     fun displayCurrentConversation(): String {
-        return currentConversation.dialog
+        return currentConversation?.dialog ?: ":)"
     }
 
-    fun getCurrentChoices(): ArrayList<Perbualan> {
-        return associatedChoices[currentConversation] ?: ArrayList()
+    fun getCurrentChoices(): ArrayList<Int> {
+        return associatedChoices[currentConversation?.id] ?: ArrayList()
     }
 
     fun getConversationByID(id: Int): Perbualan? {
         return conversations[id]
     }
 
-    fun setCurrentConversation(conversation: Perbualan) {
+    fun setCurrentConversation(id: Int) {
+        val conversation = getConversationByID(id)
         //Can we reach the new conversation from the current one?
-        if (isReachable(currentConversation, conversation)) {
+        if (currentConversation != null && isReachable(currentConversation!!.id, id)) {
             currentConversation = conversation
         } else {
             println("New conversation node is not reachable from current node!")
         }
     }
 
-    private fun isReachable(source: Perbualan, sink: Perbualan): Boolean {
-        if (!isValid(source) || !isValid(sink)) return false
+    private fun isReachable(sourceID: Int, sinkID: Int): Boolean {
+        if (!isValid(sourceID) || !isValid(sinkID)) return false
 
         //First get edges/choices from the source
-        val list = associatedChoices[source] as ArrayList
-        for (conversation in list) {
-            if (conversation.id == sink.id) {
-                return true
-            }
-        }
-        return false
+        val list = associatedChoices[sourceID] as ArrayList
+        return list.contains(sinkID)
     }
 
-    private fun isValid(conversation: Perbualan): Boolean {
-        return conversations[conversation.id] != null
+    private fun isValid(conversationID: Int): Boolean {
+        return conversations[conversationID] != null
     }
 
     override fun toString(): String {
@@ -67,11 +63,11 @@ class Graf(
         string.append(System.getProperty("line.separator"))
 
         val keys = associatedChoices.keys
-        for (conversation in keys) {
-            string.append(String.format("[%d]: ", conversation.id))
+        for (conversationID in keys) {
+            string.append(String.format("[%d]: ", conversationID))
 
-            for (choices in associatedChoices[conversation]!!) {
-                string.append(String.format("%d ", choices.id))
+            for (choiceID in associatedChoices[conversationID]!!) {
+                string.append(String.format("%d ", choiceID))
             }
 
             string.append(System.getProperty("line.separator"))
