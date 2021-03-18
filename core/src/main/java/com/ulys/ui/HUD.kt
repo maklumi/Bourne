@@ -49,7 +49,7 @@ class HUD(camera: Camera, private val player: Entiti) : Screen, Profil, Bualan {
         })
         perbualanUI.also {
             it.isMovable = true
-            it.isVisible = true
+            it.isVisible = false
             it.setPosition(stage.width / 2f, 0f)
             it.setSize(stage.width / 2f, stage.height / 2f)
         }

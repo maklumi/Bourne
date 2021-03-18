@@ -28,12 +28,12 @@ class PerbualanUI : Window("Dialog perbualan", HUD.statusuiSkin, "solidbackgroun
         dialogText.wrap = true
         dialogText.setAlignment(Align.center)
 
-        val scrollPane = ScrollPane(listItems)
+        val scrollPane = ScrollPane(listItems, skin, "inventoryPane")
         scrollPane.setOverscroll(false, true)
         scrollPane.fadeScrollBars = false
         scrollPane.setScrollingDisabled(true, false)
-        scrollPane.setScrollbarsOnTop(true)
-
+        scrollPane.setForceScroll(true, false)
+        scrollPane.setScrollBarPositions(false, true)
 
         //layout
         add()
@@ -45,7 +45,7 @@ class PerbualanUI : Window("Dialog perbualan", HUD.statusuiSkin, "solidbackgroun
         row()
         add(scrollPane).pad(10f, 20f, 10f, 10f)
 
-        debug()
+//        debug()
         pack()
 
         //Listeners
@@ -67,6 +67,7 @@ class PerbualanUI : Window("Dialog perbualan", HUD.statusuiSkin, "solidbackgroun
             return
         }
         currentEntityID = entityConfig.entityID
+        titleLabel.setText(currentEntityID)
         val graph = j.fromJson(Graf::class.java, Gdx.files.internal(fullFilenamePath))
         setConversationGraph(graph)
     }
