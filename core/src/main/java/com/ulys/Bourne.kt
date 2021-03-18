@@ -22,7 +22,7 @@ class Bourne : Game() {
         skrinLoad = SkrinLoad(this)
         skrinBaru = SkrinBaru(this)
         skrinUtama = SkrinUtama()
-        setScreen(skrinMenu)
+        setScreen(skrinUtama)
     }
 
     override fun dispose() {

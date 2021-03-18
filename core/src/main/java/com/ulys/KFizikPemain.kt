@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.collision.Ray
 import com.ulys.Penerima.Companion.PEMISAH
 import com.ulys.Penerima.Mesej
 import com.ulys.Peta.Companion.kpp
+import com.ulys.ui.Bualan
 
 class KFizikPemain : KomponenFizik() {
 
@@ -48,6 +49,7 @@ class KFizikPemain : KomponenFizik() {
                 if (distance <= lingkungan) {
                     Gdx.app.debug("KFizikPemain", "Dipilih: ${npc.konfigurasi?.entityID}")
                     npc.posMesej(Mesej.ENTITI_DIPILIH)
+                    npc.bual(npc.konfigurasi, Bualan.UIEvent.LOAD_CONVERSATION)
                 }
             }
         }

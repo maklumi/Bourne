@@ -10,6 +10,7 @@ import com.ulys.Entiti.Gerak
 import com.ulys.KomponenFizik.BoundingBoxLocation.*
 import com.ulys.Penerima.Mesej
 import com.ulys.Peta.Companion.kpp
+import com.ulys.ui.BualSubjek
 
 abstract class KomponenFizik : Penerima {
 

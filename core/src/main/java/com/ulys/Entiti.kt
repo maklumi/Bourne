@@ -6,13 +6,15 @@ import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.JsonValue
+import com.ulys.ui.BualSubjek
+import com.ulys.ui.Bualan
 import java.util.*
 
 class Entiti(
     val komponenInput: KomponenInput,
     private val komponenFizik: KomponenFizik,
     private val komponenGrafik: KomponenGrafik
-) {
+) : BualSubjek() {
 
     private val lisKomponen = arrayOf(
         komponenInput,
@@ -52,6 +54,14 @@ class Entiti(
         for (i in lisKomponen.indices) {
             lisKomponen[i].terima(mesej)
         }
+    }
+
+    fun registerPendengarBualan(observer: Bualan) {
+        addPendengar(observer)
+    }
+
+    fun unregisterPendengarBualan() {
+        removeSemuaPendengar()
     }
 
     fun dispose() {

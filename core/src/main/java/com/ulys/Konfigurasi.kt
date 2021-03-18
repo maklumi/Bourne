@@ -12,6 +12,7 @@ class Konfigurasi {
     var direction: Entiti.Arah = Entiti.Arah.DOWN
     var animationConfig: Array<AnimationConfig> = Array()
     var inventory: Array<Barang.ItemTypeID> = Array()
+    var conversationConfigPath: String = ""
 
     class AnimationConfig {
         var frameDuration: Float = 1f

@@ -11,14 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.ulys.Entiti
+import com.ulys.Konfigurasi
 import com.ulys.sejarah.Penyelia.getProp
 import com.ulys.sejarah.Penyelia.setProp
 import com.ulys.sejarah.Profil
 import com.ulys.sejarah.Profil.ProfileEvent
 import com.ulys.sejarah.Profil.ProfileEvent.PROFILE_LOADED
 import com.ulys.sejarah.Profil.ProfileEvent.SAVING_PROFILE
+import com.ulys.ui.Bualan.UIEvent.*
 
-class HUD(camera: Camera, private val player: Entiti) : Screen, Profil {
+class HUD(camera: Camera, private val player: Entiti) : Screen, Profil, Bualan {
 
     companion object {
         val statusuiTexAtlas = TextureAtlas("skins/statusui.atlas")
@@ -28,11 +30,13 @@ class HUD(camera: Camera, private val player: Entiti) : Screen, Profil {
 
     private val statusUI = StatusUI(statusuiSkin, statusuiTexAtlas)
     private val inventoryUI = InventoriUI(statusuiSkin, statusuiTexAtlas)
+    private val perbualanUI = PerbualanUI()
     private val viewport = ScreenViewport(camera)
     val stage = Stage(viewport).also {
         it.addActor(statusUI)
         it.addActor(inventoryUI)
         it.addActor(inventoryUI.tooltip)
+        it.addActor(perbualanUI)
     }
 
     init {
@@ -43,6 +47,13 @@ class HUD(camera: Camera, private val player: Entiti) : Screen, Profil {
                 inventoryUI.isVisible = !inventoryUI.isVisible
             }
         })
+        perbualanUI.also {
+            it.isMovable = true
+            it.isVisible = false
+            it.setPosition(stage.width / 2f, 0f)
+            it.setSize(stage.width / 2f, stage.height / 2f)
+//            it.loadConversation(player.konfigurasi)
+        }
     }
 
     override fun onTerima(event: ProfileEvent) {
@@ -73,6 +84,24 @@ class HUD(camera: Camera, private val player: Entiti) : Screen, Profil {
         }
     }
 
+    override fun onBual(k: Konfigurasi, event: Bualan.UIEvent) {
+        when (event) {
+            LOAD_CONVERSATION -> {
+                perbualanUI.loadConversation(k)
+            }
+            SHOW_CONVERSATION -> {
+                if (k.entityID == perbualanUI.currentEntityID) {
+                    perbualanUI.isVisible = true
+                }
+            }
+            HIDE_CONVERSATION -> {
+                if (k.entityID == perbualanUI.currentEntityID) {
+                    perbualanUI.isVisible = false
+                }
+            }
+        }
+    }
+
     override fun render(delta: Float) {
         stage.act(delta)
         stage.draw()
@@ -83,6 +112,7 @@ class HUD(camera: Camera, private val player: Entiti) : Screen, Profil {
     override fun resize(width: Int, height: Int) {
         stage.viewport.update(width, height, true)
         inventoryUI.setPosition(statusUI.width, (height - inventoryUI.height) / 2)
+        perbualanUI.setPosition(stage.width / 2f, 0f)
     }
 
     override fun pause() {}

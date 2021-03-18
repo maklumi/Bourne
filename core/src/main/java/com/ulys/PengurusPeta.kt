@@ -32,6 +32,7 @@ class PengurusPeta : Profil {
 
     fun setupPeta(jenisPeta: JenisPeta) {
         peta = getPeta(jenisPeta)
+        semuaEntiti.forEach(Entiti::unregisterPendengarBualan)
     }
 
     fun cacheTempatSpawnHampir(pos: Vector2) {

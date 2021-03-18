@@ -3,14 +3,32 @@ package com.ulys.dialog
 import java.util.*
 
 class Graf(
-    private val conversations: Hashtable<Int, Perbualan>,
-    private var currentConversationId: Int
+    var conversations: Hashtable<Int, Perbualan> = Hashtable(),
+    var currentConversationId: Int = -1
 ) {
 
-    private val associatedChoices = Hashtable<Int, ArrayList<Pilihan>>(conversations.size).also {
-        for (bual in conversations.values) {
-            it[bual.id] = ArrayList()
+    private var associatedChoices = Hashtable<Int, ArrayList<Pilihan>>(conversations.size)
+
+    /**
+     * json serializes conversations: Hashtable<Int, Perbualan> to
+     * conversations: Hashtable<String, Perbualan>
+     */
+    fun convertType() {
+        val temp = Hashtable<Int, Perbualan>()
+        val entryset = conversations.entries
+        for (entry in entryset) {
+            val kunciInt = Integer.parseInt("${entry.key}")
+            temp[kunciInt] = entry.value
         }
+        conversations = temp
+
+        val temp2 = Hashtable<Int, ArrayList<Pilihan>>()
+        val entryset2 = associatedChoices.entries
+        for (entry in entryset2) {
+            val kunciInt = Integer.parseInt("${entry.key}")
+            temp2[kunciInt] = entry.value
+        }
+        associatedChoices = temp2
     }
 
     fun addChoice(pilihan: Pilihan) {
@@ -19,7 +37,7 @@ class Graf(
     }
 
     fun displayCurrentConversation(): String {
-        return conversations[currentConversationId]?.dialog ?: ":)"
+        return conversations[currentConversationId]?.dialog ?: "😀"
     }
 
     fun getCurrentChoices(): ArrayList<Pilihan> {

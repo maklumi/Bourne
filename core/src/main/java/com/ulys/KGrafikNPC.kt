@@ -7,10 +7,14 @@ import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.ulys.Penerima.Mesej
 import com.ulys.Peta.Companion.kpp
+import com.ulys.ui.Bualan
 
 class KGrafikNPC : KomponenGrafik() {
 
-    private var entitiDipilih = false
+    private var sedangDipilih = false
+    private var telahDipilih = false
+    private var arahBukaDialog = false
+    private var arahTutupDialog = true
 
     override fun kemaskini(delta: Float, entiti: Entiti, batch: Batch, pengurusPeta: PengurusPeta) {
         masafrem = (masafrem + delta) % 5
@@ -20,7 +24,22 @@ class KGrafikNPC : KomponenGrafik() {
 //            Gdx.app.debug("KGrafikNPC", "tiada texture: ${entiti.konfigurasi?.entityID}")
 //        }
 
-        if (entitiDipilih) tandaKotakTerpilih(entiti, pengurusPeta)
+        if (sedangDipilih) {
+            tandaKotakTerpilih(entiti, pengurusPeta)
+            if (!arahBukaDialog) {
+                entiti.bual(entiti.konfigurasi, Bualan.UIEvent.SHOW_CONVERSATION)
+                arahBukaDialog = true
+                arahTutupDialog = false
+            }
+        } else {
+            if (!arahTutupDialog) {
+                entiti.bual(entiti.konfigurasi, Bualan.UIEvent.HIDE_CONVERSATION)
+                arahTutupDialog = true
+                arahBukaDialog = false
+            }
+        }
+
+
 
         texRegion?.let {
             batch.begin()
@@ -49,9 +68,10 @@ class KGrafikNPC : KomponenGrafik() {
         val lis = s.split(Penerima.PEMISAH)
         if (lis.size == 1) {
             if (Mesej.ENTITI_DIPILIH == Mesej.valueOf(lis.first())) {
-                entitiDipilih = true
+                sedangDipilih = !telahDipilih
             } else if (Mesej.ENTITI_TAK_DIPILIH == Mesej.valueOf(lis.first())) {
-                entitiDipilih = false
+                sedangDipilih = false
+                telahDipilih = sedangDipilih
             }
         }
     }
