@@ -49,11 +49,15 @@ class HUD(camera: Camera, private val player: Entiti) : Screen, Profil, Bualan {
         })
         perbualanUI.also {
             it.isMovable = true
-            it.isVisible = false
+            it.isVisible = true
             it.setPosition(stage.width / 2f, 0f)
             it.setSize(stage.width / 2f, stage.height / 2f)
-//            it.loadConversation(player.konfigurasi)
         }
+        perbualanUI.closeButton.addListener(object : ClickListener() {
+            override fun clicked(event: InputEvent, x: Float, y: Float) {
+                perbualanUI.isVisible = false
+            }
+        })
     }
 
     override fun onTerima(event: ProfileEvent) {

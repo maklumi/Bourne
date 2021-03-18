@@ -4,6 +4,8 @@ import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Vector3
+import com.badlogic.gdx.math.collision.Ray
 import com.badlogic.gdx.utils.Array
 import com.ulys.Entiti.Arah
 import com.ulys.Entiti.Gerak
@@ -20,6 +22,8 @@ abstract class KomponenFizik : Penerima {
     private val laju = Vector2(5f, 5f)
     protected var nextPos = Vector2(pos)
     var nextRect = Rectangle()
+    val ray = Ray(Vector3(), Vector3())
+    val lingkungan = 1 / kpp * 10
 
     enum class BoundingBoxLocation { BOTTOM_LEFT, BOTTOM_CENTER, CENTER }
 

@@ -12,8 +12,8 @@ import java.util.*
 
 class Entiti(
     val komponenInput: KomponenInput,
-    private val komponenFizik: KomponenFizik,
-    private val komponenGrafik: KomponenGrafik
+    val komponenFizik: KomponenFizik,
+    val komponenGrafik: KomponenGrafik
 ) : BualSubjek() {
 
     private val lisKomponen = arrayOf(

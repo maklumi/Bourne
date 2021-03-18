@@ -16,8 +16,6 @@ class KFizikPemain : KomponenFizik() {
 
     private var pilihSekali = false
     private var koordTikus = Vector3()
-    private val ray = Ray(Vector3(), Vector3())
-    private val lingkungan = 1 / kpp * 10
 
     override fun terima(s: String) {
         super.terima(s)

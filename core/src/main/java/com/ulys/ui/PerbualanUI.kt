@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.ui.Window
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
@@ -20,6 +21,7 @@ class PerbualanUI : Window("Dialog perbualan", HUD.statusuiSkin, "solidbackgroun
     private val listItems = GdxList<Pilihan>(skin)
     private var graf = Graf()
     var currentEntityID: String = ""
+    val closeButton = TextButton("X", skin)
 
     init {
         //create
@@ -34,6 +36,10 @@ class PerbualanUI : Window("Dialog perbualan", HUD.statusuiSkin, "solidbackgroun
 
 
         //layout
+        add()
+        add(closeButton)
+        row()
+
         defaults().expand().fill()
         add(dialogText).pad(10f, 10f, 10f, 10f)
         row()
@@ -43,39 +49,24 @@ class PerbualanUI : Window("Dialog perbualan", HUD.statusuiSkin, "solidbackgroun
         pack()
 
         //Listeners
-/*
-        scrollPane.addListener(object : InputListener() {
-            override fun touchDown(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int): Boolean {
-                val choice = listItems.selected ?: return true
-                graf.setCurrentConversation(choice.destinationId)
-                dialogText.setText(graf.getConversationByID(choice.destinationId)!!.dialog)
-                listItems.setItems(*graf.getCurrentChoices().toTypedArray())
-                return true
-            }
-        }
-        )
-*/
         listItems.addListener(object : ClickListener() {
             override fun clicked(event: InputEvent, x: Float, y: Float) {
                 val choice = listItems.selected ?: return
                 graf.setCurrentConversation(choice.destinationId)
                 updateDialogDanPilihan(choice.destinationId)
-//                dialogText.setText(graf.getConversationByID(choice.destinationId)!!.dialog)
-//                listItems.setItems(*graf.getCurrentChoices().toTypedArray())
-//                listItems.selectedIndex = -1
             }
         })
     }
 
     fun loadConversation(entityConfig: Konfigurasi) {
-//        val fullFilenamePath = "conversations/testConversation001.json"
         val fullFilenamePath = entityConfig.conversationConfigPath
-        currentEntityID = entityConfig.entityID
         if (fullFilenamePath.isEmpty() || !Gdx.files.internal(fullFilenamePath).exists()) {
             Gdx.app.debug(tag, "Conversation file does not exist!")
+            dialogText.setText("")
+            listItems.clearItems()
             return
         }
-
+        currentEntityID = entityConfig.entityID
         val graph = j.fromJson(Graf::class.java, Gdx.files.internal(fullFilenamePath))
         setConversationGraph(graph)
     }

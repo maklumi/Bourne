@@ -2,6 +2,7 @@ package com.ulys
 
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.Vector3
 
 class KFizikNPC : KomponenFizik() {
 
@@ -20,6 +21,11 @@ class KFizikNPC : KomponenFizik() {
         }
         if (gerak == Entiti.Gerak.WALKING) kiraPosisi(delta, arah)
 
+        if ((entiti.komponenGrafik as KGrafikNPC).sedangDipilih &&
+            iaJauhDariPemain(pengurusPeta)
+        ) {
+            entiti.posMesej(Penerima.Mesej.ENTITI_TAK_DIPILIH)
+        }
     }
 
     private fun berlagaPortalLayer(rect: Rectangle, pengurusPeta: PengurusPeta): Boolean {
@@ -28,5 +34,12 @@ class KFizikNPC : KomponenFizik() {
             .any { rect.overlaps(it.rectangle) }
     }
 
-
+    private fun iaJauhDariPemain(pengurusPeta: PengurusPeta): Boolean {
+        val pbox = pengurusPeta.entitiPemain[0].komponenFizik.nextRect
+        val origin = Vector3(pbox.x, pbox.y, 0.0f)
+        val destination = Vector3(nextRect.x, nextRect.y, 0f)
+        ray.set(origin, destination)
+        val distance = ray.origin.dst(destination)
+        return distance > lingkungan
+    }
 }

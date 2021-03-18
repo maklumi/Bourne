@@ -11,7 +11,7 @@ import com.ulys.ui.Bualan
 
 class KGrafikNPC : KomponenGrafik() {
 
-    private var sedangDipilih = false
+    var sedangDipilih = false
     private var telahDipilih = false
     private var arahBukaDialog = false
     private var arahTutupDialog = true
