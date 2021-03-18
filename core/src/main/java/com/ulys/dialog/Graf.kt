@@ -7,7 +7,12 @@ class Graf(
     var currentConversationId: Int = -1
 ) {
 
-    private var associatedChoices = Hashtable<Int, ArrayList<Pilihan>>(conversations.size)
+    private var associatedChoices = Hashtable<Int, ArrayList<Pilihan>>(conversations.size).also {
+        // untuk kegunaan graf test kena initialize
+        for (bual in conversations.values) {
+            it[bual.id] = ArrayList()
+        }
+    }
 
     /**
      * json serializes conversations: Hashtable<Int, Perbualan> to
@@ -50,7 +55,10 @@ class Graf(
 
     fun setCurrentConversation(id: Int) {
         //Can we reach the new conversation from the current one?
-        if (isReachable(currentConversationId, id)) {
+        // check case where the current node is checked against itself
+        if (currentConversationId == id ||
+            isReachable(currentConversationId, id)
+        ) {
             currentConversationId = id
         } else {
             println("New conversation node is not reachable from current node!")
