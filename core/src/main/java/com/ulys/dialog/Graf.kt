@@ -4,51 +4,36 @@ import java.util.*
 
 class Graf(
     private val conversations: Hashtable<Int, Perbualan>,
-    root: Int
+    private var currentConversationId: Int
 ) {
 
-    private var numChoices = 0
     private val associatedChoices = Hashtable<Int, ArrayList<Pilihan>>(conversations.size).also {
         for (bual in conversations.values) {
             it[bual.id] = ArrayList()
         }
     }
-    private var currentConversation = getConversationByID(root)
 
     fun addChoice(pilihan: Pilihan) {
         val arr = associatedChoices[pilihan.sourceId] ?: return
         arr.add(pilihan)
-        numChoices++
     }
 
     fun displayCurrentConversation(): String {
-        return currentConversation?.dialog ?: ":)"
+        return conversations[currentConversationId]?.dialog ?: ":)"
     }
 
     fun getCurrentChoices(): ArrayList<Pilihan> {
-        return associatedChoices[currentConversation?.id] ?: ArrayList()
+        return associatedChoices[currentConversationId] ?: ArrayList()
     }
 
     fun getConversationByID(id: Int): Perbualan? {
         return conversations[id]
     }
 
-    fun getDestinationChoicePhraseById(id: Int): String {
-        if (currentConversation == null) return "current conversation is null"
-        if (isReachable(currentConversation!!.id, id)) {
-            val list = associatedChoices[currentConversation!!.id] ?: ArrayList()
-            for (choice in list) {
-                if (choice.destinationId == id) return choice.choicePhrase
-            }
-        }
-        return "not found"
-    }
-
     fun setCurrentConversation(id: Int) {
-        val conversation = getConversationByID(id)
         //Can we reach the new conversation from the current one?
-        if (currentConversation != null && isReachable(currentConversation!!.id, id)) {
-            currentConversation = conversation
+        if (isReachable(currentConversationId, id)) {
+            currentConversationId = id
         } else {
             println("New conversation node is not reachable from current node!")
         }
@@ -74,21 +59,23 @@ class Graf(
 
     override fun toString(): String {
         val string = StringBuilder()
-        string.append("Jumlah ayat: " + conversations.size + ", pilihan:" + numChoices)
-        string.append(System.getProperty("line.separator"))
         string.append("[id perbualan]: ids pilihan")
         string.append(System.getProperty("line.separator"))
 
+        var bilanganPilihan = 0
         val keys = associatedChoices.keys
         for (conversationID in keys) {
             string.append(String.format("[%d]: ", conversationID))
 
             for (choice in associatedChoices[conversationID]!!) {
                 string.append(String.format("%d ", choice.destinationId))
+                bilanganPilihan++
             }
 
             string.append(System.getProperty("line.separator"))
         }
+        string.append("Jumlah ayat:  ${conversations.size}, pilihan: $bilanganPilihan")
+        string.append(System.getProperty("line.separator"))
 
         return string.toString()
     }

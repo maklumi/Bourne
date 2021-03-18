@@ -1,0 +1,54 @@
+{
+  "associatedChoices": {
+    "205": [],
+    "601": [
+      {
+        "class": "com.ulys.dialog.Pilihan",
+        "sourceId": 601,
+        "destinationId": 500,
+        "choicePhrase": "Go to beginning!"
+      }
+    ],
+    "500": [
+      {
+        "class": "com.ulys.dialog.Pilihan",
+        "sourceId": 500,
+        "destinationId": 601,
+        "choicePhrase": "YA"
+      },
+      {
+        "class": "com.ulys.dialog.Pilihan",
+        "sourceId": 500,
+        "destinationId": 802,
+        "choicePhrase": "TAK"
+      }
+    ],
+    "802": [
+      {
+        "class": "com.ulys.dialog.Pilihan",
+        "sourceId": 802,
+        "destinationId": 500,
+        "choicePhrase": "Go to beginning!"
+      }
+    ]
+  },
+  "conversations": {
+    "802": {
+      "id": 802,
+      "dialog": "Tak nak main sudah!"
+    },
+    "205": {
+      "id": 205,
+      "dialog": "Node tak berkaitan"
+    },
+    "601": {
+      "id": 601,
+      "dialog": "ORAIT nak main. 2-2 ialah kosong"
+    },
+    "500": {
+      "id": 500,
+      "dialog": "Sebagai permulaan, anda nak main?"
+    }
+  },
+  "currentConversationId": 500
+}
