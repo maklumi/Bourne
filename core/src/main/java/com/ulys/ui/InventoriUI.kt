@@ -14,9 +14,8 @@ import com.ulys.ui.Barang.Fungsi.*
 class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
     Window("Inventori", skin, "solidbackground") {
 
-    private val jumlahSlot = 50
     private val sebaris = 10
-    private val drag = DragAndDrop()
+    val drag = DragAndDrop()
     private val wh = 52f // slot width and height
     private val playerTable = Table()
     val equipSlots = Table()
@@ -25,6 +24,9 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
     private val tooltipListener = TooltipListener(tooltip)
 
     init {
+        inventoryTable.name = "Inventory_Slot_Table"
+        equipSlots.name = "Equipment_Slot_Table"
+
         drag.setKeepWithinStage(false) // penting
         setFillParent(false)
 
@@ -80,32 +82,38 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
         pack()
     }
 
-    fun isiInventori(table: Table, lislokasi: Array<LokasiBarang>) {
-        val cells = table.cells
-        for (i in 0 until lislokasi.size) {
-            val loc = lislokasi[i]
-            val itemTypeId = Barang.ItemTypeID.valueOf(loc.itemTypeAtLocation)
+    companion object {
+        const val jumlahSlot = 50
 
-            val slot = cells[loc.locationIndex].actor as Slot
-            slot.popBarangan()
+        fun isiInventori(table: Table, lislokasi: Array<LokasiBarang>, drag: DragAndDrop) {
+            val cells = table.cells
+            for (i in 0 until lislokasi.size) {
+                val loc = lislokasi[i]
+                val itemTypeId = Barang.ItemTypeID.valueOf(loc.itemTypeAtLocation)
 
-            for (kiraan in 0 until loc.numberItemsAtLocation) {
-                val brg = FaktoriBarang.buatBarang(itemTypeId)
-                slot.add(brg)
-                drag.addSource(SlotSumber(slot, drag))
+                val slot = cells[loc.locationIndex].actor as Slot
+                slot.popBarangan()
+
+                for (kiraan in 0 until loc.numberItemsAtLocation) {
+                    val brg = FaktoriBarang.buatBarang(itemTypeId)
+                    brg.name = table.name // set nama untuk transaksi
+                    slot.add(brg)
+                    drag.addSource(SlotSumber(slot, drag))
+                }
             }
         }
-    }
 
-    fun getInventory(fromTable: Table): Array<LokasiBarang> {
-        val cells = fromTable.cells
-        val items = Array<LokasiBarang>()
-        for (i in 0 until cells.size) {
-            val slot = cells[i].actor as Slot? ?: continue
-            if (slot.adaBarang()) {
-                items.add(LokasiBarang(i, slot.getTopItem()?.itemTypeID.toString(), slot.kiraan))
+        fun getInventory(fromTable: Table): Array<LokasiBarang> {
+            val cells = fromTable.cells
+            val items = Array<LokasiBarang>()
+            for (i in 0 until cells.size) {
+                val slot = cells[i].actor as Slot? ?: continue
+                if (slot.adaBarang()) {
+                    items.add(LokasiBarang(i, slot.getTopItem()?.itemTypeID.toString(), slot.kiraan))
+                }
             }
+            return items
         }
-        return items
+
     }
 }

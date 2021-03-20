@@ -59,7 +59,7 @@ class SkrinUtama : Screen {
 
         hudKamera = OrthographicCamera()
         hudKamera.setToOrtho(false, lebarWindow, tinggiWindow)
-        hud = HUD(hudKamera, player)
+        hud = HUD(hudKamera, player, pengurusPeta)
         Penyelia.addMurid(hud)
         Penyelia.loadProfile()
 //        hud.isiInventori(player.konfigurasi.inventory)

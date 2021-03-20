@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Array
 
-class Slot() : Stack() {
+class Slot() : Stack() , TransaksiSubjek{
 
     //All slots have this default image
     private val image = Image(NinePatch(HUD.statusuiTexAtlas.createPatch("dialog")))
@@ -24,6 +24,8 @@ class Slot() : Stack() {
         stiker = Image(HUD.itemsTexAtlas.findRegion(nama))
         rakLatar.add(stiker) // lepas init bawah
     }
+
+    override val lisTransaksi: Array<Transaksi> = Array()
 
     init {
         rakLatar.add(image)

@@ -1,6 +1,7 @@
 package com.ulys.ui
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.ulys.ui.Barang.Sifat.STACKABLE
 
@@ -12,6 +13,7 @@ class Barang(
 ) : Image(region) {
 
     var itemShortDescription: String? = null
+    var itemValue: Int = 0
 
     enum class ItemTypeID {
         ARMOR01, ARMOR02, ARMOR03, ARMOR04, ARMOR05,
@@ -50,5 +52,11 @@ class Barang(
 
     fun isSameItemType(calon: Barang): Boolean {
         return itemTypeID == calon.itemTypeID
+    }
+
+    fun hargaJual(): Int {
+        //For now, we will set the trade in value of items at about one third their original value
+//        return MathUtils.floor(itemValue * .33f) + 2
+        return itemValue
     }
 }

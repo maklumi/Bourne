@@ -23,7 +23,13 @@ class Tooltip(skin: Skin) : Window("", skin) {
 
     fun infoTerkiniBarang(inventorySlot: Slot) {
         if (inventorySlot.adaBarang()) {
-            keterangan.setText(inventorySlot.getTopItem()!!.itemShortDescription)
+            val string = StringBuilder()
+            string.append(inventorySlot.getTopItem()?.itemShortDescription)
+            string.append(System.getProperty("line.separator"))
+            string.append(String.format("Original Value: %s GP", inventorySlot.getTopItem()?.itemValue))
+            string.append(System.getProperty("line.separator"))
+            string.append(String.format("Trade Value: %s GP", inventorySlot.getTopItem()?.hargaJual()))
+            keterangan.setText(string)
             pack()
         } else {
             keterangan.setText("")

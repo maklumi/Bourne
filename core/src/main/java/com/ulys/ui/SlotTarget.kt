@@ -1,5 +1,6 @@
 package com.ulys.ui
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source
@@ -31,10 +32,11 @@ class SlotTarget(private val slotTarget: Slot) : DragAndDrop.Target(slotTarget) 
             if (target != null && actor.isSameItemType(target) && actor.isStackable()) {
                 slotTarget.add(actor)
             } else {
-                Slot.tukarTempat(sumber, slotTarget, actor)
+                Slot.tukarTempat(slotTarget, slotTarget, actor)
             }
         } else {
             slotTarget.add(actor)
+            sumber.transaksi(slotTarget, Transaksi.SlotEvent.ADDED_ITEM)
         }
 
     }

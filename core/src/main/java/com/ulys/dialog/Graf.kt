@@ -5,7 +5,7 @@ import java.util.*
 class Graf(
     var conversations: Hashtable<Int, Perbualan> = Hashtable(),
     var currentConversationId: Int = -1
-) {
+) : SubjekTindakanGraf() {
 
     private var associatedChoices = Hashtable<Int, ArrayList<Pilihan>>(conversations.size).also {
         // untuk kegunaan graf test kena initialize

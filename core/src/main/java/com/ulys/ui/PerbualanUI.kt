@@ -19,7 +19,7 @@ class PerbualanUI : Window("Dialog perbualan", HUD.statusuiSkin, "solidbackgroun
 
     private val dialogText = Label("Tiada perbualan", skin)
     private val listItems = GdxList<Pilihan>(skin)
-    private var graf = Graf()
+    var graf = Graf()
     var currentEntityID: String = ""
     val closeButton = TextButton("X", skin)
 
@@ -52,7 +52,7 @@ class PerbualanUI : Window("Dialog perbualan", HUD.statusuiSkin, "solidbackgroun
         listItems.addListener(object : ClickListener() {
             override fun clicked(event: InputEvent, x: Float, y: Float) {
                 val choice = listItems.selected ?: return
-                graf.setCurrentConversation(choice.destinationId)
+                graf.tindakanGraf(choice.conversationCommandEvent, graf)
                 updateDialogDanPilihan(choice.destinationId)
             }
         })
@@ -62,8 +62,7 @@ class PerbualanUI : Window("Dialog perbualan", HUD.statusuiSkin, "solidbackgroun
         val fullFilenamePath = entityConfig.conversationConfigPath
         if (fullFilenamePath.isEmpty() || !Gdx.files.internal(fullFilenamePath).exists()) {
             Gdx.app.debug(tag, "Conversation file does not exist!")
-            dialogText.setText("")
-            listItems.clearItems()
+            clearDialog()
             return
         }
         currentEntityID = entityConfig.entityID
@@ -73,13 +72,16 @@ class PerbualanUI : Window("Dialog perbualan", HUD.statusuiSkin, "solidbackgroun
     }
 
     private fun setConversationGraph(g: Graf) {
+        graf.removeSemuaPemerhatiTindakan()
         graf = g
         graf.convertType()
         updateDialogDanPilihan(graf.currentConversationId)
     }
 
     private fun updateDialogDanPilihan(destinationId: Int) {
+        clearDialog()
         val conversation = graf.getConversationByID(destinationId) ?: return
+        graf.setCurrentConversation(destinationId)
         dialogText.setText(conversation.dialog)
         val arraylist = graf.getCurrentChoices()
         val currentChoices = Array<Pilihan>()
@@ -88,6 +90,11 @@ class PerbualanUI : Window("Dialog perbualan", HUD.statusuiSkin, "solidbackgroun
         }
         listItems.setItems(currentChoices)
         listItems.selectedIndex = -1
+    }
+
+    private fun clearDialog() {
+        dialogText.setText("")
+        listItems.clearItems()
     }
 
     private val tag = PerbualanUI::class.java.simpleName

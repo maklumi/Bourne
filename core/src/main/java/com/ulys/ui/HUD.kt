@@ -12,6 +12,10 @@ import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.ulys.Entiti
 import com.ulys.Konfigurasi
+import com.ulys.PengurusPeta
+import com.ulys.dialog.Graf
+import com.ulys.dialog.TindakanGraf
+import com.ulys.dialog.TindakanGraf.Tujuan.*
 import com.ulys.sejarah.Penyelia.getProp
 import com.ulys.sejarah.Penyelia.setProp
 import com.ulys.sejarah.Profil
@@ -20,7 +24,8 @@ import com.ulys.sejarah.Profil.ProfileEvent.PROFILE_LOADED
 import com.ulys.sejarah.Profil.ProfileEvent.SAVING_PROFILE
 import com.ulys.ui.Bualan.UIEvent.*
 
-class HUD(camera: Camera, private val player: Entiti) : Screen, Profil, Bualan {
+class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: PengurusPeta) :
+    Screen, Profil, Bualan, TindakanGraf {
 
     companion object {
         val statusuiTexAtlas = TextureAtlas("skins/statusui.atlas")
@@ -31,12 +36,14 @@ class HUD(camera: Camera, private val player: Entiti) : Screen, Profil, Bualan {
     private val statusUI = StatusUI(statusuiSkin, statusuiTexAtlas)
     private val inventoryUI = InventoriUI(statusuiSkin, statusuiTexAtlas)
     private val perbualanUI = PerbualanUI()
+    private val kedaiUI = KedaiUI()
     private val viewport = ScreenViewport(camera)
     val stage = Stage(viewport).also {
         it.addActor(statusUI)
         it.addActor(inventoryUI)
         it.addActor(inventoryUI.tooltip)
         it.addActor(perbualanUI)
+        it.addActor(kedaiUI)
     }
 
     init {
@@ -58,6 +65,18 @@ class HUD(camera: Camera, private val player: Entiti) : Screen, Profil, Bualan {
                 perbualanUI.isVisible = false
             }
         })
+        kedaiUI.also {
+            it.isMovable = false
+            it.isVisible = false
+            it.setPosition(0f, 0f)
+            it.closeButton.addListener(object : ClickListener() {
+                override fun clicked(event: InputEvent?, x: Float, y: Float) {
+                    kedaiUI.isVisible = false
+                }
+            })
+            // tambah tooltips
+            it.inventoryActors.forEach { tip -> stage.addActor(tip) }
+        }
     }
 
     override fun onTerima(event: ProfileEvent) {
@@ -65,7 +84,7 @@ class HUD(camera: Camera, private val player: Entiti) : Screen, Profil, Bualan {
             PROFILE_LOADED -> {
                 val inventory = getProp<Array<LokasiBarang>>("playerInventory") ?: Array()
                 if (!inventory.isEmpty) {
-                    inventoryUI.isiInventori(inventoryUI.inventoryTable, inventory)
+                    InventoriUI.isiInventori(inventoryUI.inventoryTable, inventory, inventoryUI.drag)
                 } else {
                     //add default items if nothing is found
                     val items: Array<Barang.ItemTypeID> = player.konfigurasi.inventory
@@ -73,17 +92,17 @@ class HUD(camera: Camera, private val player: Entiti) : Screen, Profil, Bualan {
                     for (i in 0 until items.size) {
                         itemLocations.add(LokasiBarang(i, items.get(i).toString(), 1))
                     }
-                    inventoryUI.isiInventori(inventoryUI.inventoryTable, itemLocations)
+                    InventoriUI.isiInventori(inventoryUI.inventoryTable, itemLocations, inventoryUI.drag)
                 }
 
                 val equipInventory = getProp<Array<LokasiBarang>>("playerEquipInventory") ?: Array()
                 if (!equipInventory.isEmpty) {
-                    inventoryUI.isiInventori(inventoryUI.equipSlots, equipInventory)
+                    InventoriUI.isiInventori(inventoryUI.equipSlots, equipInventory, inventoryUI.drag)
                 }
             }
             SAVING_PROFILE -> {
-                setProp("playerInventory", inventoryUI.getInventory(inventoryUI.inventoryTable))
-                setProp("playerEquipInventory", inventoryUI.getInventory(inventoryUI.equipSlots))
+                setProp("playerInventory", InventoriUI.getInventory(inventoryUI.inventoryTable))
+                setProp("playerEquipInventory", InventoriUI.getInventory(inventoryUI.equipSlots))
             }
         }
     }
@@ -92,6 +111,7 @@ class HUD(camera: Camera, private val player: Entiti) : Screen, Profil, Bualan {
         when (event) {
             LOAD_CONVERSATION -> {
                 perbualanUI.loadConversation(k)
+                perbualanUI.graf.addPemerhatiTindakan(this)
             }
             SHOW_CONVERSATION -> {
                 if (k.entityID == perbualanUI.currentEntityID) {
@@ -102,6 +122,37 @@ class HUD(camera: Camera, private val player: Entiti) : Screen, Profil, Bualan {
                 if (k.entityID == perbualanUI.currentEntityID) {
                     perbualanUI.isVisible = false
                 }
+            }
+        }
+    }
+
+    override fun onTindakanGraf(t: TindakanGraf.Tujuan, g: Graf) {
+        when (t) {
+            LOAD_STORE_INVENTORY -> {
+                // inventori pemain
+                val inventory = InventoriUI.getInventory(inventoryUI.inventoryTable)
+                kedaiUI.loadPlayerInventory(inventory)
+                // inventori penjual black smith
+                val blackSmith = pengurusPeta.semuaEntiti.find {
+                    it.konfigurasi.entityID == "TOWN_BLACKSMITH"
+                } ?: return
+
+                val items = blackSmith.konfigurasi.inventory
+                val itemLocations = Array<LokasiBarang>().also {
+                    for (i in 0 until items.size) {
+                        it.add(LokasiBarang(i, items[i].toString(), 1))
+                    }
+                }
+                kedaiUI.loadStoreInventory(itemLocations)
+
+                perbualanUI.isVisible = false
+                kedaiUI.toFront()
+                kedaiUI.isVisible = true
+            }
+            EXIT_CONVERSATION -> {
+                perbualanUI.isVisible = false
+            }
+            NONE -> {
             }
         }
     }
