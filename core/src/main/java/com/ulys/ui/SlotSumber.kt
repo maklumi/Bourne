@@ -17,6 +17,7 @@ class SlotSumber(
         sumber = actor.parent as Slot
         sumber.paparKiraan()
         sumber.transaksi(sumber, Transaksi.SlotEvent.REMOVED_ITEM)
+        sumber.sendRemoveNotification()
 
         payload.dragActor = actor // actor is top item or null
         dragAndDrop.setDragActorPosition(-event.stageX + actor.width, -event.stageY)

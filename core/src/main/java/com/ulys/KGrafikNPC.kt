@@ -26,6 +26,7 @@ class KGrafikNPC : KomponenGrafik() {
 
         if (sedangDipilih) {
             tandaKotakTerpilih(entiti, pengurusPeta)
+            pengurusPeta.currentSelectedEntity = entiti
             if (!arahBukaDialog) {
                 entiti.bual(entiti.konfigurasi, Bualan.UIEvent.SHOW_CONVERSATION)
                 arahBukaDialog = true

@@ -16,6 +16,7 @@ import com.ulys.PengurusPeta
 import com.ulys.dialog.Graf
 import com.ulys.dialog.TindakanGraf
 import com.ulys.dialog.TindakanGraf.Tujuan.*
+import com.ulys.sejarah.Penyelia
 import com.ulys.sejarah.Penyelia.getProp
 import com.ulys.sejarah.Penyelia.setProp
 import com.ulys.sejarah.Profil
@@ -23,9 +24,10 @@ import com.ulys.sejarah.Profil.ProfileEvent
 import com.ulys.sejarah.Profil.ProfileEvent.PROFILE_LOADED
 import com.ulys.sejarah.Profil.ProfileEvent.SAVING_PROFILE
 import com.ulys.ui.Bualan.UIEvent.*
+import com.ulys.ui.StoreInventoryObserver.StoreInventoryEvent
 
 class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: PengurusPeta) :
-    Screen, Profil, Bualan, TindakanGraf {
+    Screen, Profil, Bualan, TindakanGraf, StoreInventoryObserver, StatusObserver {
 
     companion object {
         val statusuiTexAtlas = TextureAtlas("skins/statusui.atlas")
@@ -77,6 +79,9 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
             // tambah tooltips
             it.inventoryActors.forEach { tip -> stage.addActor(tip) }
         }
+        // observers
+        kedaiUI.addStoreInventoryObserver(this)
+        statusUI.addStatusObserver(this)
     }
 
     override fun onTerima(event: ProfileEvent) {
@@ -99,10 +104,19 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
                 if (!equipInventory.isEmpty) {
                     InventoriUI.isiInventori(inventoryUI.equipSlots, equipInventory, inventoryUI.drag)
                 }
+
+                // check gold
+                var goldVal = getProp("currentPlayerGP") ?: 0
+                if (goldVal < 0) {
+                    // start the player with some money
+                    goldVal = 20
+                }
+                statusUI.setGoldValue(goldVal)
             }
             SAVING_PROFILE -> {
                 setProp("playerInventory", InventoriUI.getInventory(inventoryUI.inventoryTable))
                 setProp("playerEquipInventory", InventoriUI.getInventory(inventoryUI.equipSlots))
+                setProp("currentPlayerGP", statusUI.getGoldValue())
             }
         }
     }
@@ -133,10 +147,7 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
                 val inventory = InventoriUI.getInventory(inventoryUI.inventoryTable)
                 kedaiUI.loadPlayerInventory(inventory)
                 // inventori penjual black smith
-                val blackSmith = pengurusPeta.semuaEntiti.find {
-                    it.konfigurasi.entityID == "TOWN_BLACKSMITH"
-                } ?: return
-
+                val blackSmith = pengurusPeta.currentSelectedEntity ?: return
                 val items = blackSmith.konfigurasi.inventory
                 val itemLocations = Array<LokasiBarang>().also {
                     for (i in 0 until items.size) {
@@ -151,8 +162,30 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
             }
             EXIT_CONVERSATION -> {
                 perbualanUI.isVisible = false
+                pengurusPeta.clearCurrentSelectedMapEntity()
             }
             NONE -> {
+            }
+        }
+    }
+
+    override fun onNotify(value: String, event: StoreInventoryEvent) {
+        when (event) {
+            StoreInventoryEvent.PLAYER_GP_TOTAL_UPDATED -> {
+                statusUI.setGoldValue(value.toInt())
+            }
+            StoreInventoryEvent.PLAYER_INVENTORY_UPDATED -> {
+
+            }
+        }
+    }
+
+    override fun onNotify(value: Int, event: StatusObserver.StatusEvent) {
+        when (event) {
+            StatusObserver.StatusEvent.UPDATED_GP -> {
+                kedaiUI.setPlayerGP(value)
+            }
+            else -> {
             }
         }
     }

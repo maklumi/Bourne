@@ -29,10 +29,17 @@ class PengurusPeta : Profil {
     val posisiMula: Vector2 get() = peta.posisiMula
     val semuaEntiti: Array<Entiti> get() = peta.semuaEntiti
     var entitiPemain: Array<Entiti> = Array(1)
+    var currentSelectedEntity: Entiti? = null
 
     fun setupPeta(jenisPeta: JenisPeta) {
+        clearCurrentSelectedMapEntity()
         peta = getPeta(jenisPeta)
         semuaEntiti.forEach(Entiti::unregisterPendengarBualan)
+    }
+
+    fun clearCurrentSelectedMapEntity() {
+        currentSelectedEntity?.posMesej(Penerima.Mesej.ENTITI_TAK_DIPILIH)
+        currentSelectedEntity = null
     }
 
     fun cacheTempatSpawnHampir(pos: Vector2) {

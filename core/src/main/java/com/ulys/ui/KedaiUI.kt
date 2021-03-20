@@ -2,14 +2,17 @@ package com.ulys.ui
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Array
+import com.ulys.ui.StoreInventoryObserver.StoreInventoryEvent
 
 class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
-    Transaksi {
+    Transaksi, StoreInventorySubject {
 
     private val numStoreInventorySlots = 30
     private val lengthSlotRow = 10
@@ -25,16 +28,19 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
 
     private var tradeInVal = 0
     private var fullValue = 0
+    private var playerTotal = 0
 
     private val sellTotalLabel = Label("$SELL : $tradeInVal $GP", skin)
     private val buyTotalLabel = Label("$BUY : $fullValue $GP", skin)
-
+    private val playerTotalGP = Label("$PLAYER_TOTAL : $playerTotal $GP", skin)
     private val sellButton = TextButton(SELL, skin, "inventory")
     private val buyButton = TextButton(BUY, skin, "inventory")
 
     private val buttonsTable = Table()
     private val totalLabelsTable = Table()
     val closeButton = TextButton("X", skin)
+
+    override val storeInventoryObservers = Array<StoreInventoryObserver>()
 
     init {
 //        setFillParent(true)
@@ -44,14 +50,12 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
         inventorySlotTable.name = STORE_INVENTORY
         playerInventorySlotTable.name = PLAYER_INVENTORY
 
-        sellButton.isDisabled = true
-        sellButton.touchable = Touchable.disabled
+        disableButton(sellButton, true)
 
         sellTotalLabel.setAlignment(Align.center)
         buyTotalLabel.setAlignment(Align.center)
 
-        buyButton.isDisabled = true
-        buyButton.touchable = Touchable.disabled
+        disableButton(buyButton, true)
 
         buttonsTable.defaults().expand().fill()
         buttonsTable.add(sellButton).padLeft(10f).padRight(10f)
@@ -107,7 +111,45 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
         add(totalLabelsTable)
         row()
         add(playerInventorySlotTable).pad(10f, 10f, 10f, 10f)
+        row()
+        add(playerTotalGP)
         pack()
+
+        // listeners
+        buyButton.addListener(object : ClickListener() {
+            override fun clicked(event: InputEvent, x: Float, y: Float) {
+                if (fullValue in 1..playerTotal) {
+                    playerTotal -= fullValue
+                    notify(playerTotal.toString(), StoreInventoryEvent.PLAYER_GP_TOTAL_UPDATED)
+                    fullValue = 0
+                    buyTotalLabel.setText("$BUY : $fullValue $GP")
+                    disableButton(buyButton, true)
+                }
+            }
+        })
+
+        sellButton.addListener(object : ClickListener() {
+            override fun clicked(event: InputEvent, x: Float, y: Float) {
+                if (tradeInVal > 0) {
+                    playerTotal += tradeInVal
+                    notify(playerTotal.toString(), StoreInventoryEvent.PLAYER_GP_TOTAL_UPDATED)
+                    tradeInVal = 0
+                    sellTotalLabel.setText("$SELL : $tradeInVal $GP")
+                    disableButton(sellButton, true)
+
+                    // remove sold items
+                    val cells = inventorySlotTable.cells
+                    for (i in 0 until cells.size) {
+                        val slot = cells[i].actor as Slot? ?: continue
+                        if (slot.adaBarang() &&
+                            slot.getTopItem()?.name == PLAYER_INVENTORY
+                        ) {
+                            slot.popBarangan()
+                        }
+                    }
+                }
+            }
+        })
     }
 
     fun loadPlayerInventory(playerInventoryItems: Array<LokasiBarang>) {
@@ -119,7 +161,6 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
     }
 
     override fun onTransaksi(slot: Slot, event: Transaksi.SlotEvent) {
-        Gdx.app.debug("KedaiUI", "$event : ${slot.getTopItem()} ${slot.name}")
         when (event) {
             Transaksi.SlotEvent.ADDED_ITEM -> {
                 if (slot.getTopItem()?.name == PLAYER_INVENTORY &&
@@ -128,8 +169,7 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
                     tradeInVal += slot.getTopItem()?.hargaJual() ?: 0
                     sellTotalLabel.setText("$SELL : $tradeInVal $GP")
                     if (tradeInVal > 0) {
-                        sellButton.isDisabled = false
-                        sellButton.touchable = Touchable.enabled
+                        disableButton(sellButton, false)
                     }
                 }
                 if (slot.getTopItem()?.name == STORE_INVENTORY &&
@@ -138,8 +178,7 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
                     fullValue += slot.getTopItem()?.itemValue ?: 0
                     buyTotalLabel.setText("$BUY : $fullValue $GP")
                     if (fullValue > 0) {
-                        buyButton.isDisabled = false
-                        sellButton.touchable = Touchable.enabled
+                        disableButton(buyButton, false)
                     }
                 }
             }
@@ -150,8 +189,7 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
                     tradeInVal -= slot.getTopItem()?.hargaJual() ?: 0
                     sellTotalLabel.setText("$SELL : $tradeInVal $GP")
                     if (tradeInVal <= 0) {
-                        sellButton.isDisabled = true
-                        sellButton.touchable = Touchable.disabled
+                        disableButton(sellButton, true)
                     }
                 }
                 if (slot.getTopItem()?.name == STORE_INVENTORY &&
@@ -160,11 +198,25 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
                     fullValue -= slot.getTopItem()?.itemValue ?: 0
                     buyTotalLabel.setText("$BUY : $fullValue $GP")
                     if (fullValue <= 0) {
-                        buyButton.isDisabled = true
-                        buyButton.touchable = Touchable.disabled
+                        disableButton(buyButton, true)
                     }
                 }
             }
+        }
+    }
+
+    fun setPlayerGP(value: Int) {
+        playerTotal = value
+        playerTotalGP.setText("$PLAYER_TOTAL : $playerTotal $GP")
+    }
+
+    private fun disableButton(button: Button, disable: Boolean) {
+        if (disable) {
+            button.isDisabled = true
+            button.touchable = Touchable.disabled
+        } else {
+            button.isDisabled = false
+            button.touchable = Touchable.enabled
         }
     }
 
@@ -174,5 +226,6 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
         private const val SELL = "JUAL"
         private const val BUY = "BELI"
         private const val GP = "RM"
+        private const val PLAYER_TOTAL = "Player Total"
     }
 }

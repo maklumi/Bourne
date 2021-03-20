@@ -1,11 +1,13 @@
 package com.ulys.ui
 
-import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
+import com.badlogic.gdx.utils.Array
 
-class StatusUI(skin: Skin, textureAtlas: TextureAtlas) : Window("statistik", skin) {
+class StatusUI(skin: Skin, textureAtlas: TextureAtlas) :
+    Window("statistik", skin),
+    StatusSubject {
 
     val suisInventori = ImageButton(skin, "inventory-button").also {
         it.imageCell.size(32f, 32f)
@@ -13,12 +15,14 @@ class StatusUI(skin: Skin, textureAtlas: TextureAtlas) : Window("statistik", ski
     private val hpBar = Image(textureAtlas.findRegion("HP_Bar"))
     private val mpBar = Image(textureAtlas.findRegion("MP_Bar"))
     private val xpBar = Image(textureAtlas.findRegion("XP_Bar"))
+    private val goldVal: Label
 
     private var level = 1
     private var gold = 0
     private var hp = 50
     private var mp = 50
     private var xp = 0
+    override val statusObservers = Array<StatusObserver>()
 
     init {
         val bar = Image(textureAtlas.findRegion("Bar"))
@@ -49,7 +53,7 @@ class StatusUI(skin: Skin, textureAtlas: TextureAtlas) : Window("statistik", ski
         val levelVal = Label(level.toString(), skin)
 
         val goldLabel = Label("gp: ", skin)
-        val goldVal = Label(gold.toString(), skin)
+        goldVal = Label(gold.toString(), skin)
 
         //Add to layout
         defaults().expand().fill()
@@ -88,9 +92,12 @@ class StatusUI(skin: Skin, textureAtlas: TextureAtlas) : Window("statistik", ski
 //        debug()
     }
 
-    override fun draw(batch: Batch, parentAlpha: Float) {
-        super.draw(batch, parentAlpha)
-//        background.draw(batch, 0f, 0f, 600f, 400f)
+    fun getGoldValue(): Int = gold
+
+    fun setGoldValue(value: Int) {
+        gold = value
+        goldVal.setText(gold.toString())
+        notify(gold, StatusObserver.StatusEvent.UPDATED_GP)
     }
 
 }

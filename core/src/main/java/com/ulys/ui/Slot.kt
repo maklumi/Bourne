@@ -79,6 +79,14 @@ class Slot() : Stack() , TransaksiSubjek{
         return semua
     }
 
+    fun sendAddNotification(){
+
+    }
+
+    fun sendRemoveNotification() {
+
+    }
+
     companion object {
         fun tukarTempat(sumber: Slot, target: Slot, dragActor: Barang) {
             //check if items can accept each other, otherwise, no swap
