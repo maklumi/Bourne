@@ -115,5 +115,12 @@ class InventoriUI(skin: Skin, textureAtlas: TextureAtlas) :
             return items
         }
 
+        fun setInventoryItemNames(targetTable: Table, name: String) {
+            val cells = targetTable.cells
+            for (i in 0 until cells.size) {
+                val inventorySlot = cells[i].actor as Slot? ?: continue
+                inventorySlot.updateAllInventoryItemNames(name)
+            }
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.ulys.ui
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.NinePatch
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -9,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Array
 
-class Slot() : Stack() , TransaksiSubjek{
+class Slot() : Stack(), TransaksiSubjek {
 
     //All slots have this default image
     private val image = Image(NinePatch(HUD.statusuiTexAtlas.createPatch("dialog")))
@@ -17,7 +16,7 @@ class Slot() : Stack() , TransaksiSubjek{
     private val label = Label("0", HUD.statusuiSkin, "inventory-item-count")
     private var stiker: Image? = null
     private val rakLatar = Stack()
-    var bitFungsi: Int = 0
+    private var bitFungsi: Int = 0
 
     constructor(bitFn: Int, nama: String) : this() {
         bitFungsi = bitFn
@@ -79,12 +78,40 @@ class Slot() : Stack() , TransaksiSubjek{
         return semua
     }
 
-    fun sendAddNotification(){
+    fun updateAllInventoryItemNames(name: String) {
+        if (adaBarang()) {
+            val arrayChildren = children
+            //skip first two elements
+            for (i in arrayChildren.size - 1 downTo 2) {
+                arrayChildren.get(i).name = name
+            }
+        }
+    }
+
+    fun removeAllInventoryItemsWithName(name: String) {
+        if (adaBarang()) {
+            val arrayChildren = children
+            //skip first two elements
+            for (i in arrayChildren.size - 1 downTo 2) {
+                val itemName = arrayChildren.get(i).name
+                if (itemName == name) {
+                    transaksi(this, Transaksi.SlotEvent.REMOVED_ITEM)
+                    arrayChildren.removeIndex(i)
+                }
+            }
+        }
+    }
+
+    fun getNumItems(name: String): Int {
+        return children.count { it.name == name }
+    }
+
+    fun sendAddNotification() {
 
     }
 
     fun sendRemoveNotification() {
-
+        transaksi(this, Transaksi.SlotEvent.REMOVED_ITEM)
     }
 
     companion object {

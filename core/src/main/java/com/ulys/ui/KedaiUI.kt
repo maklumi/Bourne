@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Array
+import com.ulys.j
 import com.ulys.ui.StoreInventoryObserver.StoreInventoryEvent
 
 class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
@@ -123,7 +124,9 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
                     notify(playerTotal.toString(), StoreInventoryEvent.PLAYER_GP_TOTAL_UPDATED)
                     fullValue = 0
                     buyTotalLabel.setText("$BUY : $fullValue $GP")
-                    disableButton(buyButton, true)
+                    checkButtonStates()
+                    InventoriUI.setInventoryItemNames(playerInventorySlotTable, PLAYER_INVENTORY)
+                    savePlayerInventory()
                 }
             }
         })
@@ -135,7 +138,7 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
                     notify(playerTotal.toString(), StoreInventoryEvent.PLAYER_GP_TOTAL_UPDATED)
                     tradeInVal = 0
                     sellTotalLabel.setText("$SELL : $tradeInVal $GP")
-                    disableButton(sellButton, true)
+                    checkButtonStates()
 
                     // remove sold items
                     val cells = inventorySlotTable.cells
@@ -147,6 +150,7 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
                             slot.popBarangan()
                         }
                     }
+                    savePlayerInventory()
                 }
             }
         })
@@ -168,19 +172,14 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
                 ) {
                     tradeInVal += slot.getTopItem()?.hargaJual() ?: 0
                     sellTotalLabel.setText("$SELL : $tradeInVal $GP")
-                    if (tradeInVal > 0) {
-                        disableButton(sellButton, false)
-                    }
                 }
                 if (slot.getTopItem()?.name == STORE_INVENTORY &&
                     slot.name == PLAYER_INVENTORY
                 ) {
                     fullValue += slot.getTopItem()?.itemValue ?: 0
                     buyTotalLabel.setText("$BUY : $fullValue $GP")
-                    if (fullValue > 0) {
-                        disableButton(buyButton, false)
-                    }
                 }
+                checkButtonStates()
             }
             Transaksi.SlotEvent.REMOVED_ITEM -> {
                 if (slot.getTopItem()?.name == PLAYER_INVENTORY &&
@@ -188,26 +187,33 @@ class KedaiUI : Window("Inventori Kedai", HUD.statusuiSkin, "solidbackground"),
                 ) {
                     tradeInVal -= slot.getTopItem()?.hargaJual() ?: 0
                     sellTotalLabel.setText("$SELL : $tradeInVal $GP")
-                    if (tradeInVal <= 0) {
-                        disableButton(sellButton, true)
-                    }
                 }
                 if (slot.getTopItem()?.name == STORE_INVENTORY &&
                     slot.name == PLAYER_INVENTORY
                 ) {
                     fullValue -= slot.getTopItem()?.itemValue ?: 0
                     buyTotalLabel.setText("$BUY : $fullValue $GP")
-                    if (fullValue <= 0) {
-                        disableButton(buyButton, true)
-                    }
                 }
+                checkButtonStates()
             }
         }
+    }
+
+    fun savePlayerInventory() {
+        val pemainPunya = InventoriUI.getInventory(playerInventorySlotTable)
+        val kedaiPunya = InventoriUI.getInventory(inventorySlotTable)
+        pemainPunya.addAll(kedaiPunya)
+        notify(j.toJson(pemainPunya), StoreInventoryEvent.PLAYER_INVENTORY_UPDATED)
     }
 
     fun setPlayerGP(value: Int) {
         playerTotal = value
         playerTotalGP.setText("$PLAYER_TOTAL : $playerTotal $GP")
+    }
+
+    private fun checkButtonStates() {
+        disableButton(sellButton, tradeInVal <= 0)
+        disableButton(buyButton, fullValue !in 1..playerTotal)
     }
 
     private fun disableButton(button: Button, disable: Boolean) {

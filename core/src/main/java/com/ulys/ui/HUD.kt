@@ -10,9 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.ScreenViewport
-import com.ulys.Entiti
-import com.ulys.Konfigurasi
-import com.ulys.PengurusPeta
+import com.ulys.*
 import com.ulys.dialog.Graf
 import com.ulys.dialog.TindakanGraf
 import com.ulys.dialog.TindakanGraf.Tujuan.*
@@ -74,6 +72,8 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
             it.closeButton.addListener(object : ClickListener() {
                 override fun clicked(event: InputEvent?, x: Float, y: Float) {
                     kedaiUI.isVisible = false
+                    pengurusPeta.clearCurrentSelectedMapEntity()
+                    kedaiUI.savePlayerInventory()
                 }
             })
             // tambah tooltips
@@ -87,10 +87,9 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
     override fun onTerima(event: ProfileEvent) {
         when (event) {
             PROFILE_LOADED -> {
-                val inventory = getProp<Array<LokasiBarang>>("playerInventory") ?: Array()
-                if (!inventory.isEmpty) {
-                    InventoriUI.isiInventori(inventoryUI.inventoryTable, inventory, inventoryUI.drag)
-                } else {
+                //if goldval is negative, this is our first save
+                var goldVal = getProp("currentPlayerGP") ?: -1
+                if (goldVal < 0) { // first time
                     //add default items if nothing is found
                     val items: Array<Barang.ItemTypeID> = player.konfigurasi.inventory
                     val itemLocations = Array<LokasiBarang>()
@@ -98,7 +97,11 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
                         itemLocations.add(LokasiBarang(i, items.get(i).toString(), 1))
                     }
                     InventoriUI.isiInventori(inventoryUI.inventoryTable, itemLocations, inventoryUI.drag)
+                    setProp("playerInventory", InventoriUI.getInventory(inventoryUI.inventoryTable))
                 }
+
+                val inventory = getProp<Array<LokasiBarang>>("playerInventory") ?: Array()
+                InventoriUI.isiInventori(inventoryUI.inventoryTable, inventory, inventoryUI.drag)
 
                 val equipInventory = getProp<Array<LokasiBarang>>("playerEquipInventory") ?: Array()
                 if (!equipInventory.isEmpty) {
@@ -106,7 +109,6 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
                 }
 
                 // check gold
-                var goldVal = getProp("currentPlayerGP") ?: 0
                 if (goldVal < 0) {
                     // start the player with some money
                     goldVal = 20
@@ -175,7 +177,8 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
                 statusUI.setGoldValue(value.toInt())
             }
             StoreInventoryEvent.PLAYER_INVENTORY_UPDATED -> {
-
+                val array = j.fromJson<Array<LokasiBarang>>(value)
+                InventoriUI.isiInventori(inventoryUI.inventoryTable, array, inventoryUI.drag)
             }
         }
     }
