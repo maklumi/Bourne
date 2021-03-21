@@ -72,26 +72,6 @@ class GrafBuruan {
     }
 
     override fun toString(): String {
-        val sb = StringBuilder()
-        var numberTotalChoices = 0
-
-        val keys = questTaskDependencies.keys
-        for (id in keys) {
-            sb.append(String.format("[%s]: ", id))
-            sb.append(String.format("[%s]: ", getQuestTaskByID(id)!!.taskPhrase))
-
-            for (dependency in questTaskDependencies[id]!!) {
-                numberTotalChoices++
-                sb.append(String.format("%s ", dependency.destinationId))
-            }
-
-            sb.append(System.getProperty("line.separator"))
-        }
-
-        sb.append(String.format("Number quest tasks: %d", questTasks.size))
-        sb.append(String.format(", Number of dependencies: %d", numberTotalChoices))
-        sb.append(System.getProperty("line.separator"))
-
-        return sb.toString()
+        return questTitle
     }
 }

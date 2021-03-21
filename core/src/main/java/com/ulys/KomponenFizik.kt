@@ -23,7 +23,7 @@ abstract class KomponenFizik : Penerima {
     protected var nextPos = Vector2(pos)
     var nextRect = Rectangle()
     val ray = Ray(Vector3(), Vector3())
-    val lingkungan = 1 / kpp * 10
+    val lingkungan = 1 / kpp * 20
 
     enum class BoundingBoxLocation { BOTTOM_LEFT, BOTTOM_CENTER, CENTER }
 

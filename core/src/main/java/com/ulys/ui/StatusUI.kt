@@ -23,6 +23,7 @@ class StatusUI(skin: Skin, textureAtlas: TextureAtlas) :
     private var mp = 50
     private var xp = 0
     override val statusObservers = Array<StatusObserver>()
+    val questButton = ImageButton(skin, "quest-button")
 
     init {
         val bar = Image(textureAtlas.findRegion("Bar"))
@@ -55,6 +56,7 @@ class StatusUI(skin: Skin, textureAtlas: TextureAtlas) :
         val goldLabel = Label("gp: ", skin)
         goldVal = Label(gold.toString(), skin)
 
+        questButton.imageCell.size(32f,32f)
         //Add to layout
         defaults().expand().fill()
 
@@ -62,7 +64,7 @@ class StatusUI(skin: Skin, textureAtlas: TextureAtlas) :
         pad(padTop + 10, 10f, 10f, 10f)
 
         add()
-        add()
+        add(questButton).align(Align.right)
         add(suisInventori).align(Align.right)
         row()
 

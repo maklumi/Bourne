@@ -11,10 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.ulys.*
+import com.ulys.buru.GrafBuruan
+import com.ulys.buru.Tugas
 import com.ulys.dialog.Graf
 import com.ulys.dialog.TindakanGraf
 import com.ulys.dialog.TindakanGraf.Tujuan.*
-import com.ulys.sejarah.Penyelia
 import com.ulys.sejarah.Penyelia.getProp
 import com.ulys.sejarah.Penyelia.setProp
 import com.ulys.sejarah.Profil
@@ -37,6 +38,7 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
     private val inventoryUI = InventoriUI(statusuiSkin, statusuiTexAtlas)
     private val perbualanUI = PerbualanUI()
     private val kedaiUI = KedaiUI()
+    private val buruUI = BuruUI()
     private val viewport = ScreenViewport(camera)
     val stage = Stage(viewport).also {
         it.addActor(statusUI)
@@ -44,6 +46,7 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
         it.addActor(inventoryUI.tooltip)
         it.addActor(perbualanUI)
         it.addActor(kedaiUI)
+        it.addActor(buruUI)
     }
 
     init {
@@ -79,6 +82,17 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
             // tambah tooltips
             it.inventoryActors.forEach { tip -> stage.addActor(tip) }
         }
+        buruUI.also {
+            it.isMovable = false
+            it.isVisible = false
+            it.setPosition(0f, stage.height * 0.5f)
+            it.setSize(stage.width, stage.height - statusUI.height)
+        }
+        statusUI.questButton.addListener(object : ClickListener() {
+            override fun clicked(event: InputEvent, x: Float, y: Float) {
+                buruUI.isVisible = !buruUI.isVisible
+            }
+        })
         // observers
         kedaiUI.addStoreInventoryObserver(this)
         statusUI.addStatusObserver(this)
@@ -114,11 +128,15 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
                     goldVal = 20
                 }
                 statusUI.setGoldValue(goldVal)
+
+                buruUI.quests = getProp<Array<GrafBuruan>>("playerQuests") ?: Array()
+
             }
             SAVING_PROFILE -> {
                 setProp("playerInventory", InventoriUI.getInventory(inventoryUI.inventoryTable))
                 setProp("playerEquipInventory", InventoriUI.getInventory(inventoryUI.equipSlots))
                 setProp("currentPlayerGP", statusUI.getGoldValue())
+                setProp("playerQuests", buruUI.quests)
             }
         }
     }
@@ -163,6 +181,13 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
                 kedaiUI.isVisible = true
             }
             EXIT_CONVERSATION -> {
+                perbualanUI.isVisible = false
+                pengurusPeta.clearCurrentSelectedMapEntity()
+            }
+            ACCEPT_QUEST -> {
+                val entiti = pengurusPeta.currentSelectedEntity ?: return
+                buruUI.addQuest(entiti.konfigurasi.questConfigPath)
+
                 perbualanUI.isVisible = false
                 pengurusPeta.clearCurrentSelectedMapEntity()
             }

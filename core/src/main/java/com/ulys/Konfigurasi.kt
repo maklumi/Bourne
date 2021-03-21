@@ -13,6 +13,7 @@ class Konfigurasi {
     var animationConfig: Array<AnimationConfig> = Array()
     var inventory: Array<Barang.ItemTypeID> = Array()
     var conversationConfigPath: String = ""
+    var questConfigPath = ""
 
     class AnimationConfig {
         var frameDuration: Float = 1f

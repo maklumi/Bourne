@@ -1,4 +1,30 @@
 {
+playerQuests: [
+	{
+		class: com.ulys.buru.GrafBuruan
+		questTitle: Herbs for Friend
+		questTasks: {
+			2: {
+				id: 2
+				taskPhrase: Please collect 5 herbs for my sick friend
+			}
+			1: {
+				id: 1
+				taskPhrase: Come back to me with the herbs
+			}
+		}
+		questTaskDependencies: {
+			2: []
+			1: [
+				{
+					class: com.ulys.buru.Kaitan
+					sourceId: 1
+					destinationId: 2
+				}
+			]
+		}
+	}
+]
 currentMapType: {
 	class: java.lang.String
 	value: TOWN
@@ -17,6 +43,10 @@ topWorldMapStartPosition: {
 	class: com.badlogic.gdx.math.Vector2
 	x: 16
 	y: 21
+}
+currentPlayerGP: {
+	class: java.lang.Integer
+	value: 20
 }
 playerEquipInventory: []
 playerInventory: [
