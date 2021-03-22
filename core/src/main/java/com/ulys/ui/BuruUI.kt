@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Array
+import com.ulys.PengurusPeta
 import com.ulys.buru.GrafBuruan
 import com.ulys.buru.Tugas
 import com.ulys.j
@@ -83,12 +84,24 @@ class BuruUI : Window("Quest Log", HUD.statusuiSkin, "solidbackground") {
     private fun updateQuests() {
         clearDialog()
         listQuests.setItems(quests)
-        Gdx.app.debug("BuruUI","sais list ${quests.size}")
+        Gdx.app.debug("BuruUI", "sais list ${quests.size}")
         listQuests.selectedIndex = -1
     }
 
     private fun clearDialog() {
         listQuests.clearItems()
+    }
+
+    fun mapBuruanBertukar(pengurusPeta: PengurusPeta) {
+        Gdx.app.debug(TAG, "Berburu di ${pengurusPeta.peta.jenisPeta}")
+
+        //populate items if quests have them
+        for (quest in quests) {
+            Gdx.app.debug(TAG,"quest complete ${quest.isQuestComplete}")
+            if (!quest.isQuestComplete) {
+                quest.update(pengurusPeta)
+            }
+        }
     }
 
     companion object {

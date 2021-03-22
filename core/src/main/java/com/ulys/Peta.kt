@@ -3,6 +3,8 @@ package com.ulys
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.maps.MapLayer
+import com.badlogic.gdx.maps.MapObject
+import com.badlogic.gdx.maps.MapObjects
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector2
@@ -15,6 +17,8 @@ abstract class Peta(var jenisPeta: PengeluarPeta.JenisPeta, pathPeta: String) {
     var collisionLayer: MapLayer
     var portalLayer: MapLayer
     var spawnsLayer: MapLayer
+    var questItemSpawnLayer: MapLayer?
+    var questDiscoverLayer: MapLayer?
 
     var posisiMula = Vector2()
     var posisiMulaNPCs: Array<Vector2>
@@ -30,6 +34,8 @@ abstract class Peta(var jenisPeta: PengeluarPeta.JenisPeta, pathPeta: String) {
         collisionLayer = tiledMap.layers.get(MAP_COLLISION_LAYER)
         portalLayer = tiledMap.layers.get(MAP_PORTAL_LAYER)
         spawnsLayer = tiledMap.layers.get(MAP_SPAWNS_LAYER)
+        questItemSpawnLayer = tiledMap.layers.get(QUEST_ITEM_SPAWN_LAYER)
+        questDiscoverLayer = tiledMap.layers.get(QUEST_DISCOVER_LAYER)
 
         cacheTempatSpawnHampir(posisiMula)
         posisiMulaNPCs = dapatkanLokasiMulaSemuaNPC()
@@ -73,6 +79,38 @@ abstract class Peta(var jenisPeta: PengeluarPeta.JenisPeta, pathPeta: String) {
             }
     }
 
+    fun getQuestItemSpawnPositions(objectName: String, objectTaskID: String): Array<Vector2> {
+        val positions = Array<Vector2>()
+        val mapObjects: MapObjects = questItemSpawnLayer!!.objects
+
+        for (mapObject in mapObjects) {
+            val name = mapObject.name
+            val taskID = mapObject.properties.get("taskID") as String?
+
+            if (name == null || taskID == null ||
+                name.isEmpty() || taskID.isEmpty() ||
+                !name.equals(objectName, true) ||
+                !taskID.equals(objectTaskID, true)
+            ) {
+                continue
+            }
+            //Get center of rectangle
+            var x = (mapObject as RectangleMapObject).rectangle.getX()
+            var y = mapObject.rectangle.getY()
+
+            //scale by the unit to convert from map coordinates
+            x *= kpp
+            y *= kpp
+
+            positions.add(Vector2(x, y))
+        }
+        return positions
+    }
+
+    fun addMapEntities(entities: Array<Entiti>) {
+        semuaEntiti.addAll(entities)
+    }
+
     fun cacheTempatSpawnHampir(pos: Vector2) {
         val posPemain = pos.cpy().scl(1 / kpp)
         val rectVector = Vector2()
@@ -101,8 +139,24 @@ abstract class Peta(var jenisPeta: PengeluarPeta.JenisPeta, pathPeta: String) {
         private const val MAP_COLLISION_LAYER = "MAP_COLLISION_LAYER"
         private const val MAP_SPAWNS_LAYER = "MAP_SPAWNS_LAYER"
         private const val MAP_PORTAL_LAYER = "MAP_PORTAL_LAYER"
+        private const val QUEST_ITEM_SPAWN_LAYER = "MAP_QUEST_ITEM_SPAWN_LAYER"
+        private const val QUEST_DISCOVER_LAYER = "MAP_QUEST_DISCOVER_LAYER"
 
         private const val PLAYER_START = "PLAYER_START"
         const val kpp = 1 / 16f // 1 kaki = 16 piksel
+
+
+        fun initEntity(entityConfig: Konfigurasi, position: Vector2): Entiti {
+            val entity = Pengeluar.NPC.get()
+            entity.konfigurasi = entityConfig
+
+            entity.apply {
+                posMesej(Penerima.Mesej.MUAT_ANIMASI, j.toJson(entity.konfigurasi))
+                posMesej(Penerima.Mesej.POS_MULA, j.toJson(position))
+                posMesej(Penerima.Mesej.GERAK_MULA, j.toJson(entity.konfigurasi.state))
+                posMesej(Penerima.Mesej.ARAH_MULA, j.toJson(entity.konfigurasi.direction))
+            }
+            return entity
+        }
     }
 }

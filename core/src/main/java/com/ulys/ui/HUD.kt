@@ -98,6 +98,10 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
         statusUI.addStatusObserver(this)
     }
 
+    fun mapBuruanBertukar(){
+        buruUI.mapBuruanBertukar(pengurusPeta)
+    }
+
     override fun onTerima(event: ProfileEvent) {
         when (event) {
             PROFILE_LOADED -> {
@@ -129,7 +133,7 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
                 }
                 statusUI.setGoldValue(goldVal)
 
-                buruUI.quests = getProp<Array<GrafBuruan>>("playerQuests") ?: Array()
+                buruUI.quests = getProp("playerQuests") ?: Array()
 
             }
             SAVING_PROFILE -> {
@@ -190,6 +194,7 @@ class HUD(camera: Camera, private val player: Entiti, private val pengurusPeta: 
 
                 perbualanUI.isVisible = false
                 pengurusPeta.clearCurrentSelectedMapEntity()
+                mapBuruanBertukar()
             }
             NONE -> {
             }

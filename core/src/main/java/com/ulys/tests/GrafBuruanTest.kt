@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.JsonWriter
 import com.ulys.buru.GrafBuruan
 import com.ulys.buru.Kaitan
 import com.ulys.buru.Tugas
+import com.ulys.buru.Tugas.QuestTaskPropertyType.*
 import java.util.*
 
 object GrafBuruanTest {
@@ -39,7 +40,7 @@ object GrafBuruanTest {
         grafBuruan.addDependency(firstDep)
         grafBuruan.addDependency(cycleDep)
 
-        println(grafBuruan.toString())
+//        println(grafBuruan.toString())
 
         hashtable.clear()
         grafBuruan.clear()
@@ -91,7 +92,7 @@ object GrafBuruanTest {
         val json = Json()
         json.setUsePrototypes(false)
         json.setOutputType(JsonWriter.OutputType.minimal)
-        println(json.prettyPrint(grafBuruan))
+//        println(json.prettyPrint(grafBuruan))
 
         hashtable.clear()
         grafBuruan.clear()
@@ -99,10 +100,19 @@ object GrafBuruanTest {
         val q01 = Tugas()
         q01.id = "1"
         q01.taskPhrase = "Come back to me with the herbs"
+        q01.taskProperties.put(IS_TASK_COMPLETE.name, false.toString())
+        q01.taskProperties.put(TARGET_TYPE.name, "TOWN_FOLK1")
+        q01.taskProperties.put(TARGET_LOCATION.name, "TOWN")
+        q01.questType = Tugas.QuestType.RETURN
 
         val q02 = Tugas()
         q02.id = "2"
         q02.taskPhrase = "Please collect 5 herbs for my sick mother"
+        q02.taskProperties.put(IS_TASK_COMPLETE.name, false.toString())
+        q02.taskProperties.put(TARGET_TYPE.name, "scripts/quest_herbs.json")
+        q02.taskProperties.put(TARGET_LOCATION.name, "TOWN")
+        q02.taskProperties.put(TARGET_NUM.name, "5")
+        q02.questType = Tugas.QuestType.FETCH
 
         hashtable[q01.id] = q01
         hashtable[q02.id] = q02
@@ -114,6 +124,14 @@ object GrafBuruanTest {
         qDep01.destinationId = q02.id
 
         grafBuruan.addDependency(qDep01)
+        with(grafBuruan) {
+            questID = "2"
+            isQuestComplete = false
+            questTitle = "Herbs for Friend"
+
+        }
+
+
 
         println(json.prettyPrint(grafBuruan))
     }

@@ -50,6 +50,14 @@ class PengurusPeta : Profil {
         peta.updateMapEntities(delta, batch, pengurusPeta)
     }
 
+    fun addMapEntities(entities: Array<Entiti>) {
+        peta.addMapEntities(entities)
+    }
+
+    fun getQuestItemSpawnPositions(objectName: String, objectTaskID: String): Array<Vector2> {
+        return peta.getQuestItemSpawnPositions(objectName, objectTaskID)
+    }
+
     override fun onTerima(event: Profil.ProfileEvent) {
         when (event) {
             PROFILE_LOADED -> {

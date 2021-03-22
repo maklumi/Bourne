@@ -84,9 +84,11 @@ class SkrinUtama : Screen {
             renderer.map = pengurusPeta.tiledMap
             player.posMesej(Penerima.Mesej.POS_MULA, toJson(pengurusPeta.posisiMula))
             pengurusPeta.semuaEntiti.forEach { it.registerPendengarBualan(hud) }
+            hud.mapBuruanBertukar()
         }
         renderer.setView(pengurusPeta.kamera)
-        renderer.render(intArrayOf(1))
+        renderer.render()
+//        renderer.render(intArrayOf(1))
 
         pengurusPeta.updateMapEntities(delta, renderer.batch, pengurusPeta)
 
@@ -104,7 +106,7 @@ class SkrinUtama : Screen {
     override fun pause() {
         gameState = GameState.PAUSED
         Penyelia.ajar(Profil.ProfileEvent.SAVING_PROFILE)
-//        Penyelia.saveProfile()
+        Penyelia.saveProfile()
     }
 
     override fun resume() {
